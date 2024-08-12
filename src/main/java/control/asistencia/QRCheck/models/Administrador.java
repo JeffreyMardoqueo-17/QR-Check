@@ -4,13 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "trabajadores")
-public class Trabajador extends Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer id;
+@Table(name = "administradores")
+public class Administrador extends Usuario {
 
     @NotNull
     @ManyToOne
@@ -22,25 +17,15 @@ public class Trabajador extends Usuario {
     @JoinColumn(name = "DepartamentoID", nullable = false)
     private Departamento departamento;
 
-    @NotNull(message = "La latitud actual es requerida")
+    @NotNull(message = "La latitud es requerida")
     @Column(name = "LatitudActual", precision = 10, scale = 8)
     private double latitudActual;
 
-    @NotNull(message = "La longitud actual es requerida")
+    @NotNull(message = "La longitud es requerida")
     @Column(name = "LongitudActual", precision = 11, scale = 8)
     private double longitudActual;
 
     // Getters y Setters
-
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Empresa getEmpresa() {
         return empresa;
