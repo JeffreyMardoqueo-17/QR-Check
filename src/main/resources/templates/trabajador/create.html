@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Trabajador</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light p-4">
+<div layout:fragment="content">
+    <h1 class="text-center mb-4">Crear Nuevo Trabajador</h1>
+
+    <form th:action="@{/trabajadores/save}" th:object="${trabajador}" method="post">
+        <!-- Campo Latitud -->
+        <div class="form-group">
+            <label for="latitud">Latitud</label>
+            <input type="text" class="form-control" th:field="*{latitud}" id="latitud" placeholder="Escriba la latitud" required>
+        </div>
+
+        <!-- Campo Longitud -->
+        <div class="form-group">
+            <label for="longitud">Longitud</label>
+            <input type="text" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud" required>
+        </div>
+
+        <hr class="my-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/trabajadores}" class="btn btn-secondary">Regresar</a>
+    </form>
+</div>
+
+<!-- Enlace a Bootstrap JS y dependencias -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
