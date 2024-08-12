@@ -105,10 +105,10 @@ public class TrabajadorController {
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes) {
-        trabajadorServices.eliminarPorId(id);
-        attributes.addFlashAttribute("msg", "Trabajador eliminado correctamente.");
-        return "redirect:/trabajadores"; // Redirige a la lista de trabajadores después de eliminar
+    public String delete(Trabajador trabajador, RedirectAttributes attributes){
+        trabajadorServices.eliminarPorId(trabajador.getId());
+        attributes.addFlashAttribute("msg", " eliminado correctamente");
+        return "redirect:/trabajadores";
     }
 }
 
