@@ -1,62 +1,63 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Listado de Trabajadores</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Ajusta la ruta según sea necesario -->
-</head>
-<body>
-<h1>Listado de Trabajadores</h1>
-<a th:href="@{/trabajadores/create}" class="btn btn-outline-primary">Nuevo Trabajador</a>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
 
-<div th:if="${msg != null}">
-    <script>
-        Swal.fire({
-          title: "Confirmación",
-          text: '[[${msg}]]',
-          icon: "success"
-        });
-    </script>
+<div layout:fragment="content">
+
+    <!-- Mostrar mensaje de confirmación en caso de éxito -->
+    <div th:if="${msg != null}">
+        <script>
+            Swal.fire({
+              title: "Confirmación",
+              text: '[[${msg}]]',
+              icon: "success"
+            });
+        </script>
+    </div>
+
+    <!-- Mostrar mensaje de error en caso de error -->
+    <div th:if="${error != null}">
+        <script>
+            Swal.fire({
+              title: "Error",
+              text: '[[${error}]]',
+              icon: "error"
+            });
+        </script>
+    </div>
+
+    <h1>Listado de Trabajadores</h1>
+    <a th:href="@{/trabajadores/create}" class="btn btn-outline-primary">Nuevo trabajador</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Latitud</th>
+            <th>Longitud</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${trabajadores}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.latitud}"></td>
+            <td th:text="${item.longitud}"></td>
+            <td>
+                <a th:href="@{/trabajadores/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
+                <a th:href="@{/trabajadores/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
+                <a th:href="@{/trabajadores/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                <a class="page-link" th:href="@{|/trabajadores?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+
 </div>
-
-<div th:if="${error != null}">
-    <script>
-        Swal.fire({
-          title: "Error",
-          text: '[[${error}]]',
-          icon: "error"
-        });
-    </script>
-</div>
-
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Longitud</th>
-        <th>Latitud</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${trabajadores.content}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.longitud}"></td>
-        <td th:text="${item.latitud}"></td>
-        <td>
-            <a th:href="@{/trabajadores/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a> |
-            <a th:href="@{/trabajadores/edit/{id}(id=${item.id})}" class="btn btn-outline-info">Editar</a> |
-            <a th:href="@{/trabajadores/remove/{id}(id=${item.id})}" class="btn btn-outline-danger">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link" th:href="@{|/trabajadores?page=${pageNumber}|}" th:text="${pageNumber}"></a>
-        </li>
-    </ul>
-</nav>
-</body>
-</html>
