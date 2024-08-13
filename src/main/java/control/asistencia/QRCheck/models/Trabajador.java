@@ -2,75 +2,159 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "trabajadores")
-public class Trabajador extends Usuario {
+@Table(name = "Trabajador")
+public class Trabajador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "Id")
     private Integer id;
 
-    @NotNull
+    @NotNull(message = "El nombre es requerido")
+    @Column(name = "Nombre", length = 100, nullable = false)
+    private String nombre;
+
+    @NotNull(message = "El apellido es requerido")
+    @Column(name = "Apellido", length = 100, nullable = false)
+    private String apellido;
+
+    @NotNull(message = "El email es requerido")
+    @Email(message = "Email inválido")
+    @Column(name = "Email", length = 100, nullable = false, unique = true)
+    private String email;
+
+    @NotNull(message = "La contraseña es requerida")
+    @Column(name = "Pass", length = 255, nullable = false)
+    private String pass;
+
+    @NotNull(message = "El rol es requerido")
     @ManyToOne
-    @JoinColumn(name = "EmpresaID", nullable = false)
-    private Empresa empresa;
+    @JoinColumn(name = "IdRoles", nullable = false)
+    private Roles rol;
 
-    @NotNull
+    @NotNull(message = "La latitud es requerida")
+    @Column(name = "Latitud", nullable = false)
+    private Double latitud;
+
+    @NotNull(message = "La longitud es requerida")
+    @Column(name = "Longitud", nullable = false)
+    private Double longitud;
+
+    @Column(name = "FechaCreacion")
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "FechaModificacion")
+    private LocalDateTime fechaModificacion;
+
     @ManyToOne
-    @JoinColumn(name = "DepartamentoID", nullable = false)
-    private Departamento departamento;
+    @JoinColumn(name = "ModificadoPor")
+    private Administrador modificadoPor;
 
-    @NotNull(message = "La latitud actual es requerida")
-    @Column(name = "LatitudActual", precision = 10, scale = 8)
-    private double latitudActual;
-
-    @NotNull(message = "La longitud actual es requerida")
-    @Column(name = "LongitudActual", precision = 11, scale = 8)
-    private double longitudActual;
+    @NotNull(message = "El creador es requerido")
+    @ManyToOne
+    @JoinColumn(name = "CreadoPor", nullable = false)
+    private Administrador creadoPor;
 
     // Getters y Setters
 
-    @Override
     public Integer getId() {
         return id;
     }
 
-    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Empresa getEmpresa() {
-        return empresa;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public Departamento getDepartamento() {
-        return departamento;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public double getLatitudActual() {
-        return latitudActual;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLatitudActual(double latitudActual) {
-        this.latitudActual = latitudActual;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public double getLongitudActual() {
-        return longitudActual;
+    public String getPass() {
+        return pass;
     }
 
-    public void setLongitudActual(double longitudActual) {
-        this.longitudActual = longitudActual;
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public Roles getRol() {
+        return rol;
+    }
+
+    public void setRol(Roles rol) {
+        this.rol = rol;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public Administrador getModificadoPor() {
+        return modificadoPor;
+    }
+
+    public void setModificadoPor(Administrador modificadoPor) {
+        this.modificadoPor = modificadoPor;
+    }
+
+    public Administrador getCreadoPor() {
+        return creadoPor;
+    }
+
+    public void setCreadoPor(Administrador creadoPor) {
+        this.creadoPor = creadoPor;
     }
 }

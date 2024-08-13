@@ -1,6 +1,5 @@
 package control.asistencia.QRCheck.services.implementations;
 
-import control.asistencia.QRCheck.models.Trabajador;
 import control.asistencia.QRCheck.repositories.ITrabajadorRepository;
 import control.asistencia.QRCheck.services.iterfaces.ITrabajadorService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,5 @@
 package control.asistencia.QRCheck.controlers;
 
-import control.asistencia.QRCheck.models.Trabajador;
 import control.asistencia.QRCheck.services.iterfaces.ITrabajadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

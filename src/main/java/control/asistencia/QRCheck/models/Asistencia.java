@@ -2,25 +2,26 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "asistencias")
+@Table(name = "Asistencia")
 public class Asistencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer Id;
+    @Column(name = "AsistenciaID")
+    private Integer asistenciaID;
 
-    @NotNull
+    @NotNull(message = "El trabajador es requerido")
     @ManyToOne
     @JoinColumn(name = "TrabajadorID", nullable = false)
     private Trabajador trabajador;
 
     @NotNull(message = "La fecha es requerida")
-    @Column(name = "Fecha")
+    @Column(name = "Fecha", nullable = false)
     private LocalDate fecha;
 
     @Column(name = "HoraEntrada")
@@ -34,12 +35,12 @@ public class Asistencia {
 
     // Getters y Setters
 
-    public Integer getAsistenciaId() {
-        return Id;
+    public Integer getAsistenciaID() {
+        return asistenciaID;
     }
 
-    public void setAsistenciaId(Integer asistenciaId) {
-        this.Id = asistenciaId;
+    public void setAsistenciaID(Integer asistenciaID) {
+        this.asistenciaID = asistenciaID;
     }
 
     public Trabajador getTrabajador() {
