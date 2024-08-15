@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "geolocalizacion")
+@Table(name = "geolocalizaciones")
 public class Geolocalizacion {
 
     @Id

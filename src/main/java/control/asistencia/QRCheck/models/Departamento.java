@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "departamento") // Nota: Asegúrate de que el nombre en la tabla sea el mismo en la base de datos
+@Table(name = "departamentos") // Nota: Asegúrate de que el nombre en la tabla sea el mismo en la base de datos
 public class Departamento {
 
     @Id
