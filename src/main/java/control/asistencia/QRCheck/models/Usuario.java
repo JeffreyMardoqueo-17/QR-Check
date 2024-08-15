@@ -3,44 +3,64 @@ package control.asistencia.QRCheck.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Integer id;
 
-    @NotNull(message = "El nombre es requerido obvio")
-    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
+    @NotNull(message = "El nombre es requerido")
+    @Column(name = "Nombre", length = 100, nullable = false)
     private String nombre;
 
     @NotNull(message = "El apellido es requerido")
-    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
+    @Column(name = "Apellido", length = 100, nullable = false)
     private String apellido;
 
     @NotNull(message = "El email es requerido")
     @Email(message = "Debe ser un email válido")
-    @Column(unique = true)
+    @Column(name = "Email", length = 100, nullable = false, unique = true)
     private String email;
 
     @NotNull(message = "La contraseña es requerida")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String contraseña;
-
-    @Temporal(TemporalType.DATE)
-    private Date fechaNacimiento;
+    @Column(name = "Pass", length = 255, nullable = false)
+    private String pass;
 
     @NotNull(message = "El rol es requerido")
-    private String rol; // "Administrador" o "Trabajador"
+    @ManyToOne
+    @JoinColumn(name = "IdRoles", nullable = false)
+    private Roles rol;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_creacion")
-    private Date fechaCreacion;
+    @NotNull(message = "La latitud es requerida")
+    @Column(name = "Latitud", nullable = false)
+    private Double latitud;
+
+    @NotNull(message = "La longitud es requerida")
+    @Column(name = "Longitud", nullable = false)
+    private Double longitud;
+
+    @Column(name = "FechaCreacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    @Column(name = "FechaModificacion")
+    private LocalDateTime fechaModificacion;
+
+    @ManyToOne
+    @JoinColumn(name = "CreadoPor", nullable = false)
+    private Usuario creadoPor;
+
+    @ManyToOne
+    @JoinColumn(name = "ModificadoPor")
+    private Usuario modificadoPor;
+
+    @ManyToOne
+    @JoinColumn(name = "IdEmpresa", nullable = true)
+    private Empresa empresa;
 
     // Constructor vacío
     public Usuario() {
@@ -80,35 +100,75 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getPass() {
+        return pass;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public String getRol() {
+    public Roles getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Roles rol) {
         this.rol = rol;
     }
 
-    public Date getFechaCreacion() {
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public Usuario getCreadoPor() {
+        return creadoPor;
+    }
+
+    public void setCreadoPor(Usuario creadoPor) {
+        this.creadoPor = creadoPor;
+    }
+
+    public Usuario getModificadoPor() {
+        return modificadoPor;
+    }
+
+    public void setModificadoPor(Usuario modificadoPor) {
+        this.modificadoPor = modificadoPor;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 }
