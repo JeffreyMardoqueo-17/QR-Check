@@ -1,0 +1,33 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Detalles de la Empresa</h1>
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">ID</dt>
+            <dd class="col-sm-10" th:text="${empresa.id}"></dd>
+
+            <dt class="col-sm-2">Nombre</dt>
+            <dd class="col-sm-10" th:text="${empresa.nombre}"></dd>
+
+            <dt class="col-sm-2">Dirección</dt>
+            <dd class="col-sm-10" th:text="${empresa.direccion}"></dd>
+
+            <dt class="col-sm-2">Latitud</dt>
+            <dd class="col-sm-10" th:text="${empresa.latitud}"></dd>
+
+            <dt class="col-sm-2">Longitud</dt>
+            <dd class="col-sm-10" th:text="${empresa.longitud}"></dd>
+
+            <dt class="col-sm-2">Rango Permitido</dt>
+            <dd class="col-sm-10" th:text="${empresa.rangoPermitido}"></dd>
+        </dl>
+
+        <a th:href="@{/empresa}" class="btn btn-info">Regresar</a>
+    </div>
+</div>
+</html>
