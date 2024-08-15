@@ -19,11 +19,11 @@ public class Geolocalizacion {
     private Usuario usuario;
 
     @NotNull(message = "La latitud es requerida")
-    @Column(name = "Latitud", nullable = false, precision = 10, scale = 8)
+    @Column(name = "Latitud", nullable = false)
     private Double latitud;
 
     @NotNull(message = "La longitud es requerida")
-    @Column(name = "Longitud", nullable = false, precision = 11, scale = 8)
+    @Column(name = "Longitud", nullable = false)
     private Double longitud;
 
     @Column(name = "Timestamp", nullable = false, updatable = false)
