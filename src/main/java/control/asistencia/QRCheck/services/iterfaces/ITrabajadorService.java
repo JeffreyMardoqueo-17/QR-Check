@@ -1,6 +1,5 @@
 package control.asistencia.QRCheck.services.iterfaces;
 
-import control.asistencia.QRCheck.models.Trabajador;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
