@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "historial_asistencia")
+@Table(name = "historial_asistencias")
 public class HistorialAsistencia {
 
     @Id
