@@ -2,7 +2,6 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "empresas")
@@ -10,29 +9,27 @@ public class Empresa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "Id")
     private Integer id;
 
     @NotNull(message = "El nombre es requerido")
-    @Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
-    @Column(name = "Nombre", length = 100)
+    @Column(name = "Nombre", length = 100, nullable = false)
     private String nombre;
 
     @NotNull(message = "La dirección es requerida")
-    @Size(max = 255, message = "La dirección no puede exceder los 255 caracteres")
-    @Column(name = "Direccion", length = 255)
+    @Column(name = "Direccion", length = 255, nullable = false)
     private String direccion;
 
     @NotNull(message = "La latitud es requerida")
-    @Column(name = "Latitud", precision = 10, scale = 8)
-    private double latitud;
+    @Column(name = "Latitud", nullable = false)
+    private Double latitud;
 
     @NotNull(message = "La longitud es requerida")
-    @Column(name = "Longitud", precision = 11, scale = 8)
-    private double longitud;
+    @Column(name = "Longitud", nullable = false)
+    private Double longitud;
 
     @NotNull(message = "El rango permitido es requerido")
-    @Column(name = "RangoPermitido")
+    @Column(name = "RangoPermitido", nullable = false)
     private Integer rangoPermitido;
 
     // Getters y Setters
@@ -61,19 +58,19 @@ public class Empresa {
         this.direccion = direccion;
     }
 
-    public double getLatitud() {
+    public Double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(double latitud) {
+    public void setLatitud(Double latitud) {
         this.latitud = latitud;
     }
 
-    public double getLongitud() {
+    public Double getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(double longitud) {
+    public void setLongitud(Double longitud) {
         this.longitud = longitud;
     }
 

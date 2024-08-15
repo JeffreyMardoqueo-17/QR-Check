@@ -1,0 +1,30 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Editar</h1>
+    <form th:action="@{/trabajadores/save}" th:object="${trabajador}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="latitud">latitud</label>
+                    <input type="text" class="form-control" th:field="*{latitud}" id="latitud" placeholder="latitud" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="longitud">longitud</label>
+                    <input type="text" class="form-control" th:field="*{longitud}" id="longitud" placeholder="longitud" required>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button> |
+        <a th:href="@{/trabajadores}">Regresar</a>
+    </form>
+</div>
