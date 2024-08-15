@@ -11,16 +11,16 @@ public class Asistencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer Id;
+    @Column(name = "Id")
+    private Integer id;
 
-    @NotNull
+    @NotNull(message = "El usuario es requerido")
     @ManyToOne
-    @JoinColumn(name = "TrabajadorID", nullable = false)
-    private Trabajador trabajador;
+    @JoinColumn(name = "UsuarioID", nullable = false)
+    private Usuario usuario;
 
     @NotNull(message = "La fecha es requerida")
-    @Column(name = "Fecha")
+    @Column(name = "Fecha", nullable = false)
     private LocalDate fecha;
 
     @Column(name = "HoraEntrada")
@@ -32,22 +32,26 @@ public class Asistencia {
     @Column(name = "DentroDelRango")
     private Boolean dentroDelRango;
 
+    // Constructor vacío
+    public Asistencia() {
+    }
+
     // Getters y Setters
 
-    public Integer getAsistenciaId() {
-        return Id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAsistenciaId(Integer asistenciaId) {
-        this.Id = asistenciaId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Trabajador getTrabajador() {
-        return trabajador;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setTrabajador(Trabajador trabajador) {
-        this.trabajador = trabajador;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getFecha() {

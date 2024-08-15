@@ -5,40 +5,27 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "departamentos")
+@Table(name = "departamentos") // Nota: Asegúrate de que el nombre en la tabla sea el mismo en la base de datos
 public class Departamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "DepartamentoID")
-    private Integer departamentoId;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "EmpresaID", nullable = false)
-    private Empresa empresa;
+    @Column(name = "Id")
+    private Integer id;
 
     @NotNull(message = "El nombre es requerido")
-    @Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
-    @Column(name = "Nombre", length = 100)
+    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
+    @Column(name = "Nombre", length = 50)
     private String nombre;
 
     // Getters y Setters
 
-    public Integer getDepartamentoId() {
-        return departamentoId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDepartamentoId(Integer departamentoId) {
-        this.departamentoId = departamentoId;
-    }
-
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
