@@ -1,14 +1,13 @@
 package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Email;
-
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Trabajador")
-public class Trabajador {
+@Table(name = "usuarios")
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,7 @@ public class Trabajador {
     private String apellido;
 
     @NotNull(message = "El email es requerido")
-    @Email(message = "Email inválido")
+    @Email(message = "Debe ser un email válido")
     @Column(name = "Email", length = 100, nullable = false, unique = true)
     private String email;
 
@@ -45,20 +44,27 @@ public class Trabajador {
     @Column(name = "Longitud", nullable = false)
     private Double longitud;
 
-    @Column(name = "FechaCreacion")
-    private LocalDateTime fechaCreacion;
+    @Column(name = "FechaCreacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(name = "FechaModificacion")
     private LocalDateTime fechaModificacion;
 
     @ManyToOne
-    @JoinColumn(name = "ModificadoPor")
-    private Administrador modificadoPor;
-
-    @NotNull(message = "El creador es requerido")
-    @ManyToOne
     @JoinColumn(name = "CreadoPor", nullable = false)
-    private Administrador creadoPor;
+    private Usuario creadoPor;
+
+    @ManyToOne
+    @JoinColumn(name = "ModificadoPor")
+    private Usuario modificadoPor;
+
+    @ManyToOne
+    @JoinColumn(name = "IdEmpresa", nullable = true)
+    private Empresa empresa;
+
+    // Constructor vacío
+    public Usuario() {
+    }
 
     // Getters y Setters
 
@@ -142,19 +148,27 @@ public class Trabajador {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public Administrador getModificadoPor() {
-        return modificadoPor;
-    }
-
-    public void setModificadoPor(Administrador modificadoPor) {
-        this.modificadoPor = modificadoPor;
-    }
-
-    public Administrador getCreadoPor() {
+    public Usuario getCreadoPor() {
         return creadoPor;
     }
 
-    public void setCreadoPor(Administrador creadoPor) {
+    public void setCreadoPor(Usuario creadoPor) {
         this.creadoPor = creadoPor;
+    }
+
+    public Usuario getModificadoPor() {
+        return modificadoPor;
+    }
+
+    public void setModificadoPor(Usuario modificadoPor) {
+        this.modificadoPor = modificadoPor;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 }

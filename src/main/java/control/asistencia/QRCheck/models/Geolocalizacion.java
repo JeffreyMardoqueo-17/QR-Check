@@ -2,11 +2,10 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Geolocalizacion")
+@Table(name = "geolocalizacion")
 public class Geolocalizacion {
 
     @Id
@@ -14,21 +13,25 @@ public class Geolocalizacion {
     @Column(name = "Id")
     private Integer id;
 
-    @NotNull(message = "El ID del trabajador es requerido")
+    @NotNull(message = "El usuario es requerido")
     @ManyToOne
-    @JoinColumn(name = "TrabajadorID", nullable = false)
-    private Trabajador trabajador;
+    @JoinColumn(name = "UsuarioID", nullable = false)
+    private Usuario usuario;
 
     @NotNull(message = "La latitud es requerida")
-    @Column(name = "Latitud", nullable = false)
+    @Column(name = "Latitud", nullable = false, precision = 10, scale = 8)
     private Double latitud;
 
     @NotNull(message = "La longitud es requerida")
-    @Column(name = "Longitud", nullable = false)
+    @Column(name = "Longitud", nullable = false, precision = 11, scale = 8)
     private Double longitud;
 
-    @Column(name = "Timestamp", nullable = false)
-    private LocalDateTime timestamp;
+    @Column(name = "Timestamp", nullable = false, updatable = false)
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    // Constructor vacío
+    public Geolocalizacion() {
+    }
 
     // Getters y Setters
 
@@ -40,12 +43,12 @@ public class Geolocalizacion {
         this.id = id;
     }
 
-    public Trabajador getTrabajador() {
-        return trabajador;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setTrabajador(Trabajador trabajador) {
-        this.trabajador = trabajador;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Double getLatitud() {

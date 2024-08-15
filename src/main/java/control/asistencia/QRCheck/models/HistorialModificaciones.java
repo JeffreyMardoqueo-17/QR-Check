@@ -5,21 +5,17 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "historial_asistencia")
-public class HistorialAsistencia {
+@Table(name = "historial_modificaciones")
+public class HistorialModificaciones {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
-    @NotNull(message = "La asistencia es requerida")
-    @ManyToOne
-    @JoinColumn(name = "AsistenciaID", nullable = false)
-    private Asistencia asistencia;
-
-    @Column(name = "FechaCambio", nullable = false, updatable = false)
-    private LocalDateTime fechaCambio = LocalDateTime.now();
+    @NotNull(message = "La tabla modificada es requerida")
+    @Column(name = "TablaModificada", length = 50, nullable = false)
+    private String tablaModificada;
 
     @Column(name = "CampoModificado", length = 50)
     private String campoModificado;
@@ -30,13 +26,16 @@ public class HistorialAsistencia {
     @Column(name = "ValorNuevo", length = 255)
     private String valorNuevo;
 
+    @Column(name = "FechaModificacion", nullable = false, updatable = false)
+    private LocalDateTime fechaModificacion = LocalDateTime.now();
+
     @NotNull(message = "El usuario que modificó es requerido")
     @ManyToOne
     @JoinColumn(name = "ModificadoPor", nullable = false)
     private Usuario modificadoPor;
 
     // Constructor vacío
-    public HistorialAsistencia() {
+    public HistorialModificaciones() {
     }
 
     // Getters y Setters
@@ -49,20 +48,12 @@ public class HistorialAsistencia {
         this.id = id;
     }
 
-    public Asistencia getAsistencia() {
-        return asistencia;
+    public String getTablaModificada() {
+        return tablaModificada;
     }
 
-    public void setAsistencia(Asistencia asistencia) {
-        this.asistencia = asistencia;
-    }
-
-    public LocalDateTime getFechaCambio() {
-        return fechaCambio;
-    }
-
-    public void setFechaCambio(LocalDateTime fechaCambio) {
-        this.fechaCambio = fechaCambio;
+    public void setTablaModificada(String tablaModificada) {
+        this.tablaModificada = tablaModificada;
     }
 
     public String getCampoModificado() {
@@ -87,6 +78,14 @@ public class HistorialAsistencia {
 
     public void setValorNuevo(String valorNuevo) {
         this.valorNuevo = valorNuevo;
+    }
+
+    public LocalDateTime getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
     public Usuario getModificadoPor() {
