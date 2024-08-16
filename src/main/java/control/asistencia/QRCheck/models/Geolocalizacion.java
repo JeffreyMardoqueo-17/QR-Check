@@ -2,23 +2,21 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "empresas")
-public class Empresa {
+@Table(name = "geolocalizaciones")
+public class Geolocalizacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
-    @NotNull(message = "El nombre es requerido")
-    @Column(name = "Nombre", length = 100, nullable = false)
-    private String nombre;
-
-    @NotNull(message = "La dirección es requerida")
-    @Column(name = "Direccion", length = 255, nullable = false)
-    private String direccion;
+    @NotNull(message = "El usuario es requerido")
+    @ManyToOne
+    @JoinColumn(name = "UsuarioID", nullable = false)
+    private Usuario usuario;
 
     @NotNull(message = "La latitud es requerida")
     @Column(name = "Latitud", nullable = false)
@@ -28,9 +26,12 @@ public class Empresa {
     @Column(name = "Longitud", nullable = false)
     private Double longitud;
 
-    @NotNull(message = "El rango permitido es requerido")
-    @Column(name = "RangoPermitido", nullable = false)
-    private Integer rangoPermitido;
+    @Column(name = "Timestamp", nullable = false, updatable = false)
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    // Constructor vacío
+    public Geolocalizacion() {
+    }
 
     // Getters y Setters
 
@@ -42,20 +43,12 @@ public class Empresa {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Double getLatitud() {
@@ -74,11 +67,11 @@ public class Empresa {
         this.longitud = longitud;
     }
 
-    public Integer getRangoPermitido() {
-        return rangoPermitido;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setRangoPermitido(Integer rangoPermitido) {
-        this.rangoPermitido = rangoPermitido;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

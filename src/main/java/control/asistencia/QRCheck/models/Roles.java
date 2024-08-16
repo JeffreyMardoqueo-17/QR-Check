@@ -2,22 +2,21 @@ package control.asistencia.QRCheck.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "puestos_trabajo")
-public class PuestoTrabajo {
+@Table(name = "roles")
+public class Roles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "Id")
     private Integer id;
 
     @NotNull(message = "El nombre es requerido")
-    @Column(name = "Nombre", length = 100)
+    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
+    @Column(name = "Nombre", length = 50)
     private String nombre;
-
-    @Column(name = "Descripcion", columnDefinition = "TEXT")
-    private String descripcion;
 
     // Getters y Setters
 
@@ -35,13 +34,5 @@ public class PuestoTrabajo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 }
