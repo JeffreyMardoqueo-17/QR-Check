@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="/layouts/_mainLayout"
+>
+<head>
+    <title>Generador de Código QR</title>
+</head>
+
+<div layout:fragment="content">
+    <h1>Generador de Código QR</h1>
+    <form method="get" action="/generateQR">
+        <label for="text">Texto para el QR:</label>
+        <input type="text" id="text" name="text" required>
+        <button type="submit">Generar QR</button>
+    </form>
+    <br>
+    <!-- Mostrar imagen solo si hay código QR -->
+    <img th:if="${qrCode}" th:src="'data:image/png;base64,' + ${qrCode}" alt="Código QR" />
+    <!-- Mostrar mensaje de error si ocurre algún problema -->
+    <p th:if="${error}" th:text="${error}"></p>
+</div>
+</html>
