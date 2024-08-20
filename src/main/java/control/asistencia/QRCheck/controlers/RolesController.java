@@ -56,8 +56,13 @@ public class RolesController {
             return "roles/create";
         }
 
-        rolesService.crearOEditar(roles);
-        attributes.addFlashAttribute("msg", "Rol creado correctamente");
+        if (roles.getId() != null && roles.getId()>0){
+            rolesService.crearOEditar(roles);
+            attributes.addFlashAttribute("msg", "Rol editado correctamente");
+        } else {
+            rolesService.crearOEditar(roles);
+            attributes.addFlashAttribute("msg", "Rol creado correctamente");
+        }
         return "redirect:/roles";
     }
 
