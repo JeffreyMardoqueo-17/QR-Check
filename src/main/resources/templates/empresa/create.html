@@ -1,0 +1,46 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <h1>Crear nueva Empresa</h1>
+    <form th:action="@{/empresa/save}" th:object="${empresa}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre de la empresa" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" class="form-control" th:field="*{direccion}" id="direccion" placeholder="Escriba la dirección de la empresa" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="latitud">Latitud</label>
+                    <input type="number" step="0.000001" class="form-control" th:field="*{latitud}" id="latitud" placeholder="Escriba la latitud de la empresa" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="longitud">Longitud</label>
+                    <input type="number" step="0.000001" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud de la empresa" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rangoPermitido">Rango Permitido</label>
+                    <input type="number" class="form-control" th:field="*{rangoPermitido}" id="rangoPermitido" placeholder="Escriba el rango permitido" required>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button> |
+        <a th:href="@{/empresa}">Regresar</a>
+    </form>
+</div>
+</html>
