@@ -44,10 +44,8 @@ public class DepartamentoController {
 
         return "departamentos/index";
     }
-
     @GetMapping("/create")
-    public String create(Model model) {
-        model.addAttribute("departamento", new Departamento()); // Añadido para crear un nuevo objeto
+    public String create(Departamento departamentos){
         return "departamentos/create";
     }
 
@@ -69,25 +67,22 @@ public class DepartamentoController {
     public String details(@PathVariable("id") Integer id, Model model){
         Departamento departamentos = departamentoService.buscarPorId(id).get();
         model.addAttribute("departamentos", departamentos);
-        return "departamentos/details";
+        return "departamentos/details :: detailsFragment";
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model) {
-        Optional<Departamento> departamentoOpt = departamentoService.buscarPorId(id);
-        if (departamentoOpt.isPresent()) {
-            model.addAttribute("departamento", departamentoOpt.get());
-            return "departamentos/edit";
-        } else {
-            return "error/404";
-        }
+    public String edit(@PathVariable("id") Integer id, Model model){
+        Departamento departamento = departamentoService.buscarPorId(id).get();
+        model.addAttribute("departamento", departamento);
+        return "departamentos/edit";
     }
+
 
     @GetMapping("/remove/{id}")
     public String remove(@PathVariable("id") Integer id, Model model){
         Departamento departamento = departamentoService.buscarPorId(id).get();
         model.addAttribute("departamentos", departamento);
-        return "departamentos/delete";
+        return "departamentos/delete :: deleteFragment";
     }
 
     @PostMapping("/delete")
