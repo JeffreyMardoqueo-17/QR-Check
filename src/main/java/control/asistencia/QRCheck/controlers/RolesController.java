@@ -43,10 +43,10 @@ public class RolesController {
         return "roles/index";
     }
 
-    @GetMapping("/create")
-    public String create(Roles roles){
-        return "roles/create";
-    }
+//    @GetMapping("/create")
+//    public String create(Roles roles){
+//        return "roles/create";
+//    }
 
     @PostMapping("/save")
     public String save(Roles roles, BindingResult result, Model model, RedirectAttributes attributes){
@@ -66,27 +66,27 @@ public class RolesController {
         return "redirect:/roles";
     }
 
-    @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model){
-        Roles roles = rolesService.buscarPorId(id).get();
-        model.addAttribute("roles", roles);
-        return "roles/details :: detailsFragment";
-    }
+//    @GetMapping("/details/{id}")
+//    public String details(@PathVariable("id") Integer id, Model model){
+//        Roles roles = rolesService.buscarPorId(id).get();
+//        model.addAttribute("roles", roles);
+//        return "roles/details :: detailsFragment";
+//    }
 
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model){
-        Roles roles = rolesService.buscarPorId(id).get();
-        model.addAttribute("roles", roles);
-        return "roles/edit :: editRoleModal";
-    }
+//    @GetMapping("/edit/{id}")
+//    public String edit(@PathVariable("id") Integer id, Model model){
+//        Roles roles = rolesService.buscarPorId(id).get();
+//        model.addAttribute("roles", roles);
+//        return "roles/edit :: editRoleModal";
+//    }
 
 
-    @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model){
-        Roles roles = rolesService.buscarPorId(id).get();
-        model.addAttribute("roles", roles);
-        return "roles/delete :: deleteFragment";
-    }
+//    @GetMapping("/remove/{id}")
+//    public String remove(@PathVariable("id") Integer id, Model model){
+//        Roles roles = rolesService.buscarPorId(id).get();
+//        model.addAttribute("roles", roles);
+//        return "roles/delete :: deleteFragment";
+//    }
 
     @PostMapping("/delete")
     public String delete(Roles roles, RedirectAttributes attributes){
