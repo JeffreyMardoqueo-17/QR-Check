@@ -65,21 +65,22 @@ public class RolesController {
     public String details(@PathVariable("id") Integer id, Model model){
         Roles roles = rolesService.buscarPorId(id).get();
         model.addAttribute("roles", roles);
-        return "roles/details";
+        return "roles/details :: detailsFragment";
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model){
         Roles roles = rolesService.buscarPorId(id).get();
         model.addAttribute("roles", roles);
-        return "roles/edit";
+        return "roles/edit :: editRoleModal";
     }
+
 
     @GetMapping("/remove/{id}")
     public String remove(@PathVariable("id") Integer id, Model model){
         Roles roles = rolesService.buscarPorId(id).get();
         model.addAttribute("roles", roles);
-        return "roles/delete";
+        return "roles/delete :: deleteFragment";
     }
 
     @PostMapping("/delete")
