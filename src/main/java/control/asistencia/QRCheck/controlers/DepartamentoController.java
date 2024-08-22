@@ -44,46 +44,54 @@ public class DepartamentoController {
 
         return "departamentos/index";
     }
-    @GetMapping("/create")
-    public String create(Departamento departamentos){
-        return "departamentos/create";
-    }
+
+//    @GetMapping("/create")
+//    public String create(Departamento departamentos){
+//        return "departamentos/create";
+//    }
+//
+
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("departamento") Departamento departamento, BindingResult result, Model model, RedirectAttributes attributes) {
-        if (result.hasErrors()) {
-            model.addAttribute("departamento", departamento);
+    public String save(Departamento departamentos, BindingResult result, Model model, RedirectAttributes attributes){
+        if(result.hasErrors()){
+            model.addAttribute(departamentos);
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "departamentos/create";
         }
 
-        departamentoService.crearOEditar(departamento);
-        attributes.addFlashAttribute("msg", "Departamento creado correctamente");
+        if (departamentos.getId() != null && departamentos.getId()>0){
+            departamentoService.crearOEditar(departamentos);
+            attributes.addFlashAttribute("msg", "Departamento editado correctamente");
+        } else {
+            departamentoService.crearOEditar(departamentos);
+            attributes.addFlashAttribute("msg", "Departamentos creado correctamente");
+        }
         return "redirect:/departamentos";
     }
 
 
-    @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model){
-        Departamento departamentos = departamentoService.buscarPorId(id).get();
-        model.addAttribute("departamentos", departamentos);
-        return "departamentos/details :: detailsFragment";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model){
-        Departamento departamento = departamentoService.buscarPorId(id).get();
-        model.addAttribute("departamento", departamento);
-        return "departamentos/edit";
-    }
-
-
-    @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model){
-        Departamento departamento = departamentoService.buscarPorId(id).get();
-        model.addAttribute("departamentos", departamento);
-        return "departamentos/delete :: deleteFragment";
-    }
+//    @GetMapping("/details/{id}")
+//    public String details(@PathVariable("id") Integer id, Model model){
+//        Departamento departamentos = departamentoService.buscarPorId(id).get();
+//        model.addAttribute("departamentos", departamentos);
+//        return "departamentos/details :: detailsFragment";
+//    }
+//
+//    @GetMapping("/edit/{id}")
+//    public String edit(@PathVariable("id") Integer id, Model model){
+//        Departamento departamentos = departamentoService.buscarPorId(id).get();
+//        model.addAttribute("departamentos", departamentos);
+//        return "departamentos/edit :: editDepartamentoModal";
+//    }
+//
+//
+//    @GetMapping("/remove/{id}")
+//    public String remove(@PathVariable("id") Integer id, Model model){
+//        Departamento departamento = departamentoService.buscarPorId(id).get();
+//        model.addAttribute("departamentos", departamento);
+//        return "departamentos/delete :: deleteFragment";
+//    }
 
     @PostMapping("/delete")
     public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes) {
