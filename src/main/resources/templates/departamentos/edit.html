@@ -1,0 +1,39 @@
+<!--<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Departamento</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div layout:fragment="content" class="container mt-4">
+    <h1>Editar Departamento</h1>
+    <form th:action="@{/departamentos/save}" th:object="${departamento}" method="post">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del departamento" required>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button> |
+        <a th:href="@{/departamentos}" class="btn btn-secondary">Regresar</a>
+    </form>
+</div>
+</body>
+</html>
+-->

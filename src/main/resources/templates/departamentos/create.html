@@ -1,0 +1,29 @@
+<!--<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Departamento</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Crear nuevo Departamento</h1>
+    <form th:action="@{/departamentos/save}" th:object="${departamento}" method="post">
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del departamento" required>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/departamentos}" class="btn btn-secondary">Regresar</a>
+    </form>
+</div>
+</body>
+</html>

@@ -57,13 +57,13 @@
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.rangoPermitido}"></td>
             <td>
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="'#detailsEmpresaModal' + ${item.id}">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsEmpresaModal' + ${item.id}">
                     <i class="fa-solid fa-eye"></i> Detalles
                 </button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#editEmpresaModal' + ${item.id}">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editEmpresaModal' + ${item.id}">
                     <i class="fa-solid fa-pencil"></i> Editar
                 </button>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#removeEmpresaModal' + ${item.id}">
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeEmpresaModal' + ${item.id}">
                     <i class="fa-solid fa-trash"></i> Eliminar
                 </button>
             </td>
@@ -71,9 +71,8 @@
         </tbody>
     </table>
 
-    <!-- Paginación -->
-    <nav aria-label="Page navigation example" class="my-4">
-        <ul class="pagination justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
             <li class="page-item" th:each="pageNumber : ${pageNumbers}">
                 <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
