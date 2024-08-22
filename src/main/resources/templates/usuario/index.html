@@ -1,0 +1,82 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<div layout:fragment="content">
+    <!-- Mostrar mensaje de confirmación en caso de éxito -->
+    <div th:if="${msg != null}">
+        <script>
+            Swal.fire({
+              title: "Confirmación",
+              text: '[[${msg}]]',
+              icon: "success"
+            });
+        </script>
+    </div>
+
+    <!-- Mostrar mensaje de error en caso de error -->
+    <div th:if="${error != null}">
+        <script>
+            Swal.fire({
+              title: "Error",
+              text: '[[${error}]]',
+              icon: "error"
+            });
+        </script>
+    </div>
+
+    <h1>Listado de Usuarios</h1>
+    <a th:href="@{/usuarios/create}" class="btn btn-outline-primary">Nuevo Usuario</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Latitud</th>
+            <th>Longitud</th>
+            <th>Fecha Creación</th>
+            <th>Fecha Modificación</th>
+            <th>Creado Por</th>
+            <th>Modificado Por</th>
+            <th>Empresa</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${usuarios}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.nombre}"></td>
+            <td th:text="${item.apellido}"></td>
+            <td th:text="${item.email}"></td>
+            <td th:text="${item.rol}"></td>
+            <td th:text="${item.latitud}"></td>
+            <td th:text="${item.longitud}"></td>
+            <td th:text="${item.fechaCreacion}"></td>
+            <td th:text="${item.fechaModificacion}"></td>
+            <td th:text="${item.creadoPor}"></td>
+            <td th:text="${item.modificadoPor}"></td>
+            <td th:text="${item.empresa.nombre}"></td>
+            <td>
+                <a th:href="@{/usuarios/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
+                <a th:href="@{/usuarios/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
+                <a th:href="@{/usuarios/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                <a class="page-link" th:href="@{|/usuarios?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+</html>
