@@ -1,6 +1,7 @@
 package control.asistencia.QRCheck.controlers;
 
 import control.asistencia.QRCheck.models.Empresa;
+import control.asistencia.QRCheck.models.Roles;
 import control.asistencia.QRCheck.services.iterfaces.IEmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,10 +50,10 @@ public class EmpresaController {
     }
 
     // Este método muestra el formulario para crear una nueva empresa.
-    @GetMapping("/create")
-    public String create(Empresa empresa) {
-        return "empresa/create";
-    }
+    //@GetMapping("/create")
+    //public String create(Empresa empresa){
+    //    return "empresa/create";
+    //}
 
     // Este método guarda una nueva empresa después de que el usuario llena el formulario.
     @PostMapping("/save")
@@ -64,35 +65,39 @@ public class EmpresaController {
             return "empresa/create";
         }
 
-        // Guarda o edita la empresa y muestra un mensaje de éxito.
-        empresaService.crearOEditar(empresa);
-        attributes.addFlashAttribute("msg", "Empresa creada correctamente");
+        if (empresa.getId() != null && empresa.getId()>0){
+            empresaService.crearOEditar(empresa);
+            attributes.addFlashAttribute("msg", "Empresa editada correctamente");
+        } else {
+            empresaService.crearOEditar(empresa);
+            attributes.addFlashAttribute("msg", "Empresa creada correctamente");
+        }
         return "redirect:/empresa";
     }
 
     // Este método muestra los detalles de una empresa específica.
-    @GetMapping("/details/{id}")
-    public String details(@PathVariable("id") Integer id, Model model) {
-        Empresa empresa = empresaService.buscarPorId(id).orElse(null);
-        model.addAttribute("empresa", empresa);
-        return "empresa/details";
-    }
+    //@GetMapping("/details/{id}")
+    //public String details(@PathVariable("id") Integer id, Model model) {
+    //    Empresa empresa = empresaService.buscarPorId(id).orElse(null);
+    //   model.addAttribute("empresa", empresa);
+    //   return "empresa/details :: detailsFragment";
+    //}
 
     // Este método muestra el formulario para editar una empresa existente.
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, Model model) {
-        Empresa empresa = empresaService.buscarPorId(id).orElse(null);
-        model.addAttribute("empresa", empresa);
-        return "empresa/edit";
-    }
+    //@GetMapping("/edit/{id}")
+    //public String edit(@PathVariable("id") Integer id, Model model) {
+    //    Empresa empresa = empresaService.buscarPorId(id).orElse(null);
+    //    model.addAttribute("empresa", empresa);
+    //    return "empresa/edit";
+    //}
 
     // Este método muestra una pantalla para confirmar la eliminación de una empresa.
-    @GetMapping("/remove/{id}")
-    public String remove(@PathVariable("id") Integer id, Model model) {
-        Empresa empresa = empresaService.buscarPorId(id).orElse(null);
-        model.addAttribute("empresa", empresa);
-        return "empresa/delete";
-    }
+    //@GetMapping("/remove/{id}")
+    //public String remove(@PathVariable("id") Integer id, Model model){
+    //    Empresa empresa = empresaService.buscarPorId(id).get();
+    //    model.addAttribute("empresa", empresa);
+    //    return "empresa/delete :: deleteFragment";
+    //}
 
     // Este método elimina la empresa después de confirmar la eliminación.
     @PostMapping("/delete")
