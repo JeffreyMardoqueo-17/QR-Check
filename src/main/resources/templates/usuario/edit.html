@@ -5,7 +5,7 @@
 
 <div layout:fragment="content">
     <h1>Editar Usuario</h1>
-    <form th:action="@{/usuario/save}" th:object="${usuario}" method="post">
+    <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="row">
             <div class="col-md-6">
@@ -57,6 +57,22 @@
                 <div class="form-group">
                     <label for="longitud">Longitud</label>
                     <input type="number" step="any" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- <label for="empresas">Empresa</label>
+                    <select id="empresas" class="form-control" th:field="*{empresa}">
+                        <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
+                    </select>-->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="empresas">Empresa</label>
+                    <select id="empresas" class="form-control" th:field="*{empresa}">
+                        <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
+                    </select>
                 </div>
             </div>
         </div>
