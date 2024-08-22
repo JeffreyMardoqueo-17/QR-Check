@@ -3,35 +3,44 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css">
+
 <div layout:fragment="content">
-    <!-- Mostrar mensaje de confirmación en caso de éxito -->
+
+    <!-- Mensajes de Confirmación y Error -->
     <div th:if="${msg != null}">
         <script>
             Swal.fire({
                 title: "Confirmación",
                 text: '[[${msg}]]',
-                icon: "success"
+                icon: "success",
+                confirmButtonColor: '#3085d6',
             });
         </script>
     </div>
-
-    <!-- Mostrar mensaje de error en caso de error -->
     <div th:if="${error != null}">
         <script>
             Swal.fire({
                 title: "Error",
                 text: '[[${error}]]',
-                icon: "error"
+                icon: "error",
+                confirmButtonColor: '#d33',
             });
         </script>
     </div>
 
-    <h1>Listado de Roles</h1>
-    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createRoleModal">
-        Nuevo Rol
+    <!-- Título Principal -->
+    <h1 class="my-4">Listado de Roles</h1>
+
+    <!-- Botón para Crear Nuevo Rol -->
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createRoleModal">
+        <i class="fa-solid fa-plus"></i> Nuevo Rol
     </button>
-    <table class="table table-striped">
-        <thead>
+
+    <!-- Tabla de Roles -->
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
         <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -43,17 +52,23 @@
             <td th:text="${item.id}"></td>
             <td th:text="${item.nombre}"></td>
             <td>
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="'#detailsRoleModal' + ${item.id}">Detalles</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#editRoleModal' + ${item.id}">Editar</button>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#removeRoleModal' + ${item.id}">Eliminar</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsRoleModal' + ${item.id}">
+                    <i class="fa-solid fa-eye"></i> Detalles
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editRoleModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeRoleModal' + ${item.id}">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
             </td>
-
         </tr>
         </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
+    <!-- Paginación -->
+    <nav aria-label="Page navigation example" class="my-4">
+        <ul class="pagination justify-content-center">
             <li class="page-item" th:each="pageNumber : ${pageNumbers}">
                 <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
@@ -64,7 +79,7 @@
     <div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="createRoleModalLabel">Nuevo Rol</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -76,7 +91,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-success">Crear</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </form>
@@ -84,25 +99,23 @@
         </div>
     </div>
 
-    <!-- Modal para Editar Roles -->
+    <!-- Modal para Editar -->
     <th:block th:each="item : ${roles}">
+        <!-- Modal Editar -->
         <div class="modal fade" th:id="'editRoleModal' + ${item.id}" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="editRoleModalLabel">Editar Rol</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form th:action="@{/roles/save}" method="post">
-                            <!-- Envia el ID del rol a actualizar -->
                             <input type="hidden" name="id" th:value="${item.id}">
-
                             <div class="mb-3">
                                 <label for="editRoleName" class="form-label">Nombre del Rol</label>
                                 <input type="text" class="form-control" id="editRoleName" name="nombre" th:value="${item.nombre}" required>
                             </div>
-
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -112,29 +125,18 @@
                 </div>
             </div>
         </div>
-    </th:block>
 
-
-    <!-- Modal para Detalles Rol -->
-    <th:block th:each="item : ${roles}">
+        <!-- Modal Detalles -->
         <div class="modal fade" th:id="'detailsRoleModal' + ${item.id}" tabindex="-1" aria-labelledby="detailsRoleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-secondary text-white">
                         <h5 class="modal-title" id="detailsRoleModalLabel">Detalles del Rol</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
-
-                            <dl class="row">
-                                <dt class="col-sm-2">ID</dt>
-                                <dd class="col-sm-10" th:text="${item.id}"></dd>
-
-                                <dt class="col-sm-2">Nombre</dt>
-                                <dd class="col-sm-10" th:text="${item.nombre}"></dd>
-                            </dl>
-                        </div>
+                        <p><strong>ID:</strong> <span th:text="${item.id}"></span></p>
+                        <p><strong>Nombre:</strong> <span th:text="${item.nombre}"></span></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -142,40 +144,28 @@
                 </div>
             </div>
         </div>
-    </th:block>
 
-    <!-- Modal para Eliminar Roles -->
-    <th:block th:each="item : ${roles}">
+        <!-- Modal Eliminar -->
         <div class="modal fade" th:id="'removeRoleModal' + ${item.id}" tabindex="-1" aria-labelledby="removeRoleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-danger text-white">
                         <h5 class="modal-title" id="removeRoleModalLabel">Eliminar Rol</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Está seguro de que desea eliminar este rol?</p>
-                        <div>
-                            <dl class="row">
-                                <dt class="col-sm-2">ID</dt>
-                                <dd class="col-sm-10" th:text="${item.id}"></dd>
-
-                                <dt class="col-sm-2">Nombre</dt>
-                                <dd class="col-sm-10" th:text="${item.nombre}"></dd>
-                            </dl>
-                        </div>
+                        <p>¿Estás seguro de que deseas eliminar el rol <strong th:text="${item.nombre}"></strong>?</p>
                     </div>
                     <div class="modal-footer">
-                        <form th:action="@{/roles/delete}" method="post">
-                            <input type="hidden" name="id" th:value="${item.id}">
+                        <form th:action="@{/roles/delete/{id}(id=${item.id})}" method="post">
                             <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
     </th:block>
-
 </div>
+
 </html>

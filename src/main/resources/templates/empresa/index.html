@@ -3,6 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css">
+
+
 <div layout:fragment="content">
     <!-- Mostrar mensaje de confirmación en caso de éxito -->
     <div th:if="${msg != null}">
@@ -26,12 +30,14 @@
         </script>
     </div>
 
-    <h1>Listado de Empresas</h1>
-    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createEmpresaModal">
-        Nueva Empresa
+    <h1 class="my-4">Listado de Empresas</h1>
+
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createEmpresaModal">
+        <i class="fa-solid fa-plus"></i> Nueva Empresa
     </button>
-    <table class="table table-striped">
-        <thead>
+
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
         <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -50,20 +56,26 @@
             <td th:text="${item.latitud}"></td>
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.rangoPermitido}"></td>
-
             <td>
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="'#detailsEmpresaModal' + ${item.id}">Detalles</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#editEmpresaModal' + ${item.id}">Editar</button>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#removeEmpresaModal' + ${item.id}">Eliminar</button>
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="'#detailsEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-eye"></i> Detalles
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#editEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#removeEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
+    <!-- Paginación -->
+    <nav aria-label="Page navigation example" class="my-4">
+        <ul class="pagination justify-content-center">
             <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/empresas?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+                <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
         </ul>
     </nav>
@@ -72,7 +84,7 @@
     <div class="modal fade" id="createEmpresaModal" tabindex="-1" aria-labelledby="createEmpresaModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="createEmpresaModalLabel">Nueva Empresa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -104,7 +116,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </form>
@@ -117,7 +129,7 @@
         <div class="modal fade" th:id="'editEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="editEmpresaModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="editEmpresaModalLabel">Editar Empresa</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -164,34 +176,32 @@
     <!-- Modal para Detalles Empresa -->
     <th:block th:each="item : ${empresas}">
         <div class="modal fade" th:id="'detailsEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="detailsEmpresaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="detailsEmpresaModalLabel">Detalles de la Empresa</h5>
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title" id="detailsEmpresaModalLabel">Detalles de Empresa</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <dl class="row">
-                                <dt class="col-sm-4">ID</dt>
-                                <dd class="col-sm-8" th:text="${item.id}"></dd>
+                        <dl class="row">
+                            <dt class="col-sm-3">ID</dt>
+                            <dd class="col-sm-9" th:text="${item.id}"></dd>
 
-                                <dt class="col-sm-4">Nombre</dt>
-                                <dd class="col-sm-8" th:text="${item.nombre}"></dd>
+                            <dt class="col-sm-3">Nombre</dt>
+                            <dd class="col-sm-9" th:text="${item.nombre}"></dd>
 
-                                <dt class="col-sm-4">Dirección</dt>
-                                <dd class="col-sm-8" th:text="${item.direccion}"></dd>
+                            <dt class="col-sm-3">Dirección</dt>
+                            <dd class="col-sm-9" th:text="${item.direccion}"></dd>
 
-                                <dt class="col-sm-4">Latitud</dt>
-                                <dd class="col-sm-8" th:text="${item.latitud}"></dd>
+                            <dt class="col-sm-3">Latitud</dt>
+                            <dd class="col-sm-9" th:text="${item.latitud}"></dd>
 
-                                <dt class="col-sm-4">Longitud</dt>
-                                <dd class="col-sm-8" th:text="${item.longitud}"></dd>
+                            <dt class="col-sm-3">Longitud</dt>
+                            <dd class="col-sm-9" th:text="${item.longitud}"></dd>
 
-                                <dt class="col-sm-4">Rango Permitido</dt>
-                                <dd class="col-sm-8" th:text="${item.rangoPermitido}"></dd>
-                            </dl>
-                        </div>
+                            <dt class="col-sm-3">Rango Permitido</dt>
+                            <dd class="col-sm-9" th:text="${item.rangoPermitido}"></dd>
+                        </dl>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -206,45 +216,24 @@
         <div class="modal fade" th:id="'removeEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="removeEmpresaModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-danger text-white">
                         <h5 class="modal-title" id="removeEmpresaModalLabel">Eliminar Empresa</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Está seguro de que desea eliminar esta empresa?</p>
-                        <div>
-                            <dl class="row">
-                                <dt class="col-sm-4">ID</dt>
-                                <dd class="col-sm-8" th:text="${item.id}"></dd>
-
-                                <dt class="col-sm-4">Nombre</dt>
-                                <dd class="col-sm-8" th:text="${item.nombre}"></dd>
-
-                                <dt class="col-sm-4">Dirección</dt>
-                                <dd class="col-sm-8" th:text="${item.direccion}"></dd>
-
-                                <dt class="col-sm-4">Latitud</dt>
-                                <dd class="col-sm-8" th:text="${item.latitud}"></dd>
-
-                                <dt class="col-sm-4">Longitud</dt>
-                                <dd class="col-sm-8" th:text="${item.longitud}"></dd>
-
-                                <dt class="col-sm-4">Rango Permitido</dt>
-                                <dd class="col-sm-8" th:text="${item.rangoPermitido}"></dd>
-                            </dl>
-                        </div>
+                        <p>¿Estás seguro de que deseas eliminar la empresa <strong th:text="${item.nombre}"></strong>?</p>
                     </div>
                     <div class="modal-footer">
                         <form th:action="@{/empresa/delete}" method="post">
                             <input type="hidden" name="id" th:value="${item.id}">
                             <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
     </th:block>
-
 </div>
+
 </html>
