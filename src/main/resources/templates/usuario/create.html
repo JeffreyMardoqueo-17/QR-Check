@@ -31,12 +31,23 @@
                     <input type="password" class="form-control" th:field="*{pass}" id="pass" placeholder="Escriba la contraseña del usuario" required>
                 </div>
             </div>
-            <div class="col-md-6">
+
+           <!-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="rol">Rol</label>
                     <input type="text" class="form-control" th:field="*{rol}" id="rol" placeholder="Escriba el rol del usuario" required>
                 </div>
+            </div>-->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rol">Rol</label>
+                    <select id="rol" class="form-control" th:field="*{rol}">
+                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                    </select>
+                </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="latitud">Latitud</label>
@@ -60,12 +71,11 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
                 <div class="form-group">
                     <label for="longitud">Longitud</label>
                     <input type="number" step="0.000001" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario">
-                </div>
-            </div>
+                </div> -->
 
         </div>
         <hr>
