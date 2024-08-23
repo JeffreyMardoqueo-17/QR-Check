@@ -31,7 +31,7 @@
             <dd class="col-sm-10" th:text="${usuario.longitud}"></dd>
         </dl>
 
-        <form th:action="@{/usuario/delete}" method="post">
+        <form th:action="@{/usuarios/delete}" method="post">
             <input type="hidden" name="id" th:value="${usuario.id}">
             <input type="submit" value="Eliminar" class="btn btn-danger"> |
             <a th:href="@{/usuario}">Regresar</a>
