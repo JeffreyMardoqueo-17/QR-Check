@@ -38,7 +38,9 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="rol">Rol</label>
-                    <input type="text" class="form-control" th:field="*{rol}" id="rol" placeholder="Escriba el rol del usuario" required>
+                    <select id="rol" class="form-control" th:field="*{rol}">
+                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -79,7 +81,7 @@
 
         <hr>
         <button type="submit" class="btn btn-primary">Guardar cambios</button> |
-        <a th:href="@{/usuario}">Regresar</a>
+        <a th:href="@{/usuarios}">Regresar</a>
     </form>
 </div>
 </html>
