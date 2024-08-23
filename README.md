@@ -17,3 +17,5 @@ El proyecto Toma de Asistencia QRCheck es una innovadora aplicación web diseña
 ![image](https://github.com/user-attachments/assets/9912e8c3-7dd6-47ca-8ced-46063e921c0c)
 
 ![image](https://github.com/user-attachments/assets/84f90018-dbe7-4f95-96d8-08906b105d9e)
+
+![image](https://github.com/user-attachments/assets/24acade5-5c50-4771-bac6-0350a2d1d726)
