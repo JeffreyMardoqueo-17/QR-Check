@@ -86,6 +86,10 @@
   box-sizing: border-box;
 }
 
+.header-ligth {
+  background: #F5F5F5;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth;
@@ -2328,6 +2332,10 @@ progress {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.inputBusqueda {
+  width: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .form-control,
@@ -4232,12 +4240,59 @@ fieldset:disabled .btn {
   --bs-nav-link-font-weight: ;
   --bs-nav-link-color: var(--bs-link-color);
   --bs-nav-link-hover-color: var(--bs-link-hover-color);
-  --bs-nav-link-disabled-color: #6c757d;
+  --bs-nav-link-disabled-color: red;
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+}
+
+/* Fondo gradiente para la barra lateral */
+.sb-sidenav-dark {
+  background: #f5f5f5 !important;
+}
+
+/* Color de texto en negro para los enlaces */
+.sb-sidenav-dark .nav-link {
+  color: black !important;
+  font-weight: 500 !important;
+}
+
+/* Color al pasar el cursor sobre los enlaces */
+.sb-sidenav-dark .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgb(63, 62, 62) !important;
+  border-radius: 4px !important;
+}
+
+/* Iconos más visibles */
+.sb-sidenav-dark .sb-nav-link-icon i {
+  color: white !important;
+  font-size: 1.1rem !important;
+}
+
+/* Personalización de la flecha de colapso */
+.sb-sidenav-collapse-arrow {
+  color: white !important;
+}
+
+/* Encabezados estilizados */
+.sb-sidenav-menu-heading {
+  color: rgb(83, 83, 83) !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-bottom: 10px !important;
+}
+
+/* Estilo de footer */
+.sb-sidenav-footer {
+  background-color: #34495e !important;
+  color: white !important;
+  font-size: 0.8rem !important;
+  text-align: center !important;
+  padding: 15px 0 !important;
 }
 
 .nav-link {
@@ -4363,9 +4418,14 @@ fieldset:disabled .btn {
 }
 
 .navbar {
+  background-color: #f5f5f5 !important;
+}
+
+.navbar {
   --bs-navbar-padding-x: 0;
   --bs-navbar-padding-y: 0.5rem;
-  --bs-navbar-color: rgba(0, 0, 0, 0.55);
+  --bs-navbar-color: #0000008c;
+  /*El color del iconoo*/
   --bs-navbar-hover-color: rgba(0, 0, 0, 0.7);
   --bs-navbar-disabled-color: rgba(0, 0, 0, 0.3);
   --bs-navbar-active-color: rgba(0, 0, 0, 0.9);
@@ -12937,12 +12997,12 @@ body {
 }
 
 .sb-sidenav-dark {
-  background-color: #212529;
-  color: rgba(255, 255, 255, 0.5);
+  background-color: #f5f5f5;
+  color: black;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.25);
+  color: #0000;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
@@ -12950,11 +13010,11 @@ body {
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.25);
+  color: black;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
-  color: rgba(255, 255, 255, 0.25);
+  color: black;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
@@ -12979,7 +13039,7 @@ body {
 }
 
 .sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: #adb5bd;
+  color: black;
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link {

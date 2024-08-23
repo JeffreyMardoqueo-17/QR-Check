@@ -1,0 +1,154 @@
+/* Estilo para la tabla */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 25px 0 !important;
+    font-size: 18px !important;
+    font-family: 'Arial', sans-serif !important;
+    background-color: #f5f5f5 !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+/* Estilo para las filas */
+table tr {
+    border-bottom: 1px solid #dddddd !important;
+}
+
+/* Estilo para el encabezado */
+table th, table td {
+    padding: 12px 15px !important;
+    text-align: left !important;
+    color: #333 !important;
+}
+
+/* Estilo para las celdas */
+table th {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* Estilo para las filas alternas */
+table tr:nth-child(even) {
+    background-color: #f2f2f2 !important;
+}
+
+/* Estilo para la última fila */
+table tr:last-of-type {
+    border-bottom: 2px solid #333 !important;
+}
+
+/*ESTIL PARA EL INPUT DE BUSQUEDA DE ARRIBA*/
+/* Estilo general del formulario */
+form.form-inline {
+    width: 80% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+}
+
+/* Estilo para el contenedor del input */
+form .input-group {
+    border-radius: 30px !important;
+    overflow: hidden !important;
+    border: 1px solid gray;
+}
+
+/* Estilo para el input de búsqueda */
+form .form-control {
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+}
+
+/* Estilo para el botón de búsqueda */
+form .btn-primary {
+    background-color: #333 !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 0 30px 30px 0 !important;
+    color: #fff !important;
+}
+
+/* Estilo para el ícono de búsqueda */
+form .btn-primary i {
+    color: #fff !important;
+}
+
+/* Estilo para cambiar el color del input al enfocarse */
+form .form-control:focus {
+    background-color: #ffff !important;
+    color: #333 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* Estilo para el contenedor del sidebar */
+#layoutSidenav_nav .sb-sidenav {
+    background-color: #333333 !important;
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    padding: 20px 15px !important;
+}
+/* dropdown-styles.css */
+/* Estilo para el menú desplegable */
+.dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.8) !important; /* Fondo blanco con opacidad */
+    backdrop-filter: blur(5px) !important; /* Desenfoque de fondo */
+    border: 1px solid rgba(0, 0, 0, 0.125) !important; /* Borde con opacidad */
+    border-radius: 0.375rem !important; /* Redondeo de bordes */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important; /* Sombra sutil */
+    z-index: 1050 !important; /* Asegura que el menú esté por encima de otros elementos */
+}
+
+/* Estilo para el ítem del menú desplegable */
+.dropdown-item {
+    color: #495057 !important; /* Color del texto */
+    padding: 0.5rem 1rem !important; /* Espaciado */
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important; /* Fondo gris claro en hover */
+}
+
+/* Línea divisoria en el menú desplegable */
+.dropdown-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.125) !important; /* Línea divisoria con opacidad */
+}
+
+/* Estilo para los enlaces del sidebar */
+#layoutSidenav_nav .sb-sidenav .nav-link {
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
+    margin-bottom: 10px !important;
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+/* Efecto hover en los enlaces */
+#layoutSidenav_nav .sb-sidenav .nav-link:hover {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+/* Estilo para los íconos de los enlaces */
+#layoutSidenav_nav .sb-sidenav .sb-nav-link-icon {
+    color: #ffffff !important;
+    margin-right: 10px !important;
+}
+
+/* Efecto hover en los íconos */
+#layoutSidenav_nav .sb-sidenav .nav-link:hover .sb-nav-link-icon {
+    color: #cccccc !important;
+}
+
+/* Estilo para el texto de los encabezados del menú */
+#layoutSidenav_nav .sb-sidenav .sb-sidenav-menu-heading {
+    color: #aaaaaa !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    padding: 15px 0 !important;
+    margin-bottom: 10px !important;
+}
