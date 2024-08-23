@@ -3,6 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css">
+
+
 <div layout:fragment="content">
     <!-- Mostrar mensaje de confirmación en caso de éxito -->
     <div th:if="${msg != null}">
@@ -26,10 +30,14 @@
         </script>
     </div>
 
-    <h1>Listado de Empresas</h1>
-    <a th:href="@{/empresa/create}" class="btn btn-outline-primary">Nueva Empresa</a>
-    <table class="table table-striped">
-        <thead>
+    <h1 class="my-4">Listado de Empresas</h1>
+
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createEmpresaModal">
+        <i class="fa-solid fa-plus"></i> Nueva Empresa
+    </button>
+
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
         <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -48,11 +56,16 @@
             <td th:text="${item.latitud}"></td>
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.rangoPermitido}"></td>
-
             <td>
-                <a th:href="@{/empresa/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
-                <a th:href="@{/empresa/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
-                <a th:href="@{/empresa/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-eye"></i> Detalles
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeEmpresaModal' + ${item.id}">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
             </td>
         </tr>
         </tbody>
@@ -61,11 +74,165 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/empresas?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+                <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
         </ul>
     </nav>
 
+    <!-- Modal para Crear Empresa -->
+    <div class="modal fade" id="createEmpresaModal" tabindex="-1" aria-labelledby="createEmpresaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="createEmpresaModalLabel">Nueva Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/empresa/save}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre de la empresa" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Escriba la dirección de la empresa" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="latitud" class="form-label">Latitud</label>
+                            <input type="number" step="0.000001" class="form-control" id="latitud" name="latitud" placeholder="Escriba la latitud de la empresa" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="longitud" class="form-label">Longitud</label>
+                            <input type="number" step="0.000001" class="form-control" id="longitud" name="longitud" placeholder="Escriba la longitud de la empresa" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rangoPermitido" class="form-label">Rango Permitido</label>
+                            <input type="number" class="form-control" id="rangoPermitido" name="rangoPermitido" placeholder="Escriba el rango permitido" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Empresa -->
+    <th:block th:each="item : ${empresas}">
+        <div class="modal fade" th:id="'editEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="editEmpresaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="editEmpresaModalLabel">Editar Empresa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/empresa/save}" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+
+                            <div class="mb-3">
+                                <label for="editNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="editNombre" name="nombre" th:value="${item.nombre}" placeholder="Escriba el nombre de la empresa" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editDireccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="editDireccion" name="direccion" th:value="${item.direccion}" placeholder="Escriba la dirección de la empresa" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editLatitud" class="form-label">Latitud</label>
+                                <input type="number" step="0.000001" class="form-control" id="editLatitud" name="latitud" th:value="${item.latitud}" placeholder="Escriba la latitud de la empresa" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editLongitud" class="form-label">Longitud</label>
+                                <input type="number" step="0.000001" class="form-control" id="editLongitud" name="longitud" th:value="${item.longitud}" placeholder="Escriba la longitud de la empresa" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editRangoPermitido" class="form-label">Rango Permitido</label>
+                                <input type="number" class="form-control" id="editRangoPermitido" name="rangoPermitido" th:value="${item.rangoPermitido}" placeholder="Escriba el rango permitido" required>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Modal para Detalles Empresa -->
+    <th:block th:each="item : ${empresas}">
+        <div class="modal fade" th:id="'detailsEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="detailsEmpresaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title" id="detailsEmpresaModalLabel">Detalles de Empresa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">ID</dt>
+                            <dd class="col-sm-9" th:text="${item.id}"></dd>
+
+                            <dt class="col-sm-3">Nombre</dt>
+                            <dd class="col-sm-9" th:text="${item.nombre}"></dd>
+
+                            <dt class="col-sm-3">Dirección</dt>
+                            <dd class="col-sm-9" th:text="${item.direccion}"></dd>
+
+                            <dt class="col-sm-3">Latitud</dt>
+                            <dd class="col-sm-9" th:text="${item.latitud}"></dd>
+
+                            <dt class="col-sm-3">Longitud</dt>
+                            <dd class="col-sm-9" th:text="${item.longitud}"></dd>
+
+                            <dt class="col-sm-3">Rango Permitido</dt>
+                            <dd class="col-sm-9" th:text="${item.rangoPermitido}"></dd>
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Modal para Eliminar Empresa -->
+    <th:block th:each="item : ${empresas}">
+        <div class="modal fade" th:id="'removeEmpresaModal' + ${item.id}" tabindex="-1" aria-labelledby="removeEmpresaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="removeEmpresaModalLabel">Eliminar Empresa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar la empresa <strong th:text="${item.nombre}"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form th:action="@{/empresa/delete}" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
 </div>
 
 </html>

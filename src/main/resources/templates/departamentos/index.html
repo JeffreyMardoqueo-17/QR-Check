@@ -1,16 +1,20 @@
+<!DOCTYPE html >
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/_mainLayout">
+      layout:decorate="/layouts/_mainLayout" >
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css">
 
 <div layout:fragment="content">
     <!-- Mostrar mensaje de confirmación en caso de éxito -->
     <div th:if="${msg != null}">
         <script>
             Swal.fire({
-              title: "Confirmación",
-              text: '[[${msg}]]',
-              icon: "success"
+                title: "Confirmación",
+                text: '[[${msg}]]',
+                icon: "success"
             });
         </script>
     </div>
@@ -19,17 +23,20 @@
     <div th:if="${error != null}">
         <script>
             Swal.fire({
-              title: "Error",
-              text: '[[${error}]]',
-              icon: "success"
+                title: "Error",
+                text: '[[${error}]]',
+                icon: "error"
             });
         </script>
     </div>
 
-    <h1>Listado de Roles</h1>
-    <a th:href="@{/departamentos/create}" class="btn btn-outline-primary">Nuevo Rol</a>
-    <table class="table table-striped">
-        <thead>
+    <h1 class="my-4">Listado de Departamentos</h1>
+
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createDepartmentModal">
+        <i class="fa-solid fa-plus"></i> Nuevo Departamento
+    </button>
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
         <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -40,11 +47,16 @@
         <tr th:each="item : ${departamentos}">
             <td th:text="${item.id}"></td>
             <td th:text="${item.nombre}"></td>
-
             <td>
-                <a th:href="@{/departamentos/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
-                <a th:href="@{/departamentos/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
-                <a th:href="@{/departamentos/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsDepartmentModal' + ${item.id}">
+                    <i class="fa-solid fa-eye"></i> Detalles
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editDepartamentoModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeDepartmentModal' + ${item.id}">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
             </td>
         </tr>
         </tbody>
@@ -53,9 +65,121 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                <a class="page-link" th:href="@{|/departamentos?page=${pageNumber}|}" th:text="${pageNumber}"></a>
+                <a class="page-link" th:href="@{|/roles?page=${pageNumber}|}" th:text="${pageNumber}"></a>
             </li>
         </ul>
     </nav>
 
+    <!-- Modal para Crear Departamento -->
+    <div class="modal fade" id="createDepartmentModal" tabindex="-1" aria-labelledby="createDepartmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="createDepartmentModalLabel">Nuevo Departamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/departamentos/save}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="departmentName" class="form-label">Nombre del Departamento</label>
+                            <input type="text" class="form-control" id="departmentName" name="nombre" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--editar -->
+    <th:block th:each="item : ${departamentos}">
+        <div class="modal fade" th:id="'editDepartamentoModal' + ${item.id}" tabindex="-1" aria-labelledby="editDepartamentoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="editDepartamentoModalLabel">Editar Departamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/departamentos/save}" method="post">
+
+                            <input type="hidden" name="id" th:value="${item.id}">
+
+                            <div class="mb-3">
+                                <label for="editDepartamentoName" class="form-label">Nombre del Departamento</label>
+                                <input type="text" class="form-control" id="editDepartamentoName" name="nombre" th:value="${item.nombre}" required>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Modales para Detalles de los Departamentos -->
+    <th:block th:each="item : ${departamentos}">
+        <div class="modal fade" th:id="'detailsDepartmentModal' + ${item.id}" tabindex="-1" aria-labelledby="detailsDepartmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title" id="detailsDepartmentModalLabel">Detalles del Departamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <dl class="row">
+                                <dt class="col-sm-2">ID</dt>
+                                <dd class="col-sm-10" th:text="${item.id}"></dd>
+
+                                <dt class="col-sm-2">Nombre</dt>
+                                <dd class="col-sm-10" th:text="${item.nombre}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Modales para Eliminar Departamentos -->
+    <th:block th:each="item : ${departamentos}">
+        <div class="modal fade" th:id="'removeDepartmentModal' + ${item.id}" tabindex="-1" aria-labelledby="removeDepartmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="removeDepartmentModalLabel">Eliminar Departamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar el departamento <strong th:text="${item.nombre}"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form th:action="@{/departamentos/delete}" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+
+
 </div>
+
+</body>
+
+</html>

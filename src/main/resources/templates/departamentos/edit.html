@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -8,16 +8,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Departamento</title>
-    <!-- Incluye Bootstrap CSS -->
+
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <!-- Incluye tu archivo CSS personalizado -->
+
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div layout:fragment="content" class="container mt-4">
     <h1>Editar Departamento</h1>
     <form th:action="@{/departamentos/save}" th:object="${departamento}" method="post">
-        <!-- Campo oculto para el ID del departamento -->
+
         <input type="hidden" th:field="*{id}">
 
         <div class="row">
@@ -36,3 +36,4 @@
 </div>
 </body>
 </html>
+-->
