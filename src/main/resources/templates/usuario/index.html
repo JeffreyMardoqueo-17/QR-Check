@@ -57,9 +57,18 @@
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.fechaCreacion}"></td>
             <td th:text="${item.fechaModificacion}"></td>
-            <td th:text="${item.creadoPor.nombre}"></td>
-            <td th:text="${item.modificadoPor.nombre}"></td>
-            <td th:text="${item.empresa.nombre}"></td>
+            <td>
+                <span th:if="${item.creadoPor != null}" th:text="${item.creadoPor.nombre}"></span>
+                <span th:unless="${item.creadoPor != null}">Nombre no disponible</span>
+            </td>
+            <td>
+                <span th:if="${item.modificadoPor != null}" th:text="${item.modificadoPor.nombre}"></span>
+                <span th:unless="${item.modificadoPor != null}">Nombre no disponible</span>
+            </td>
+            <td>
+                <span th:if="${item.empresa != null}" th:text="${item.empresa.nombre}"></span>
+                <span th:unless="${item.empresa != null}">Empresa no disponible</span>
+            </td>
             <td>
                 <a th:href="@{/usuarios/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
                 <a th:href="@{/usuarios/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
