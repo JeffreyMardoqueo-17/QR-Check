@@ -6,11 +6,11 @@ import control.asistencia.QRCheck.models.Usuario;
 import control.asistencia.QRCheck.services.iterfaces.IEmpresaService;
 import control.asistencia.QRCheck.services.iterfaces.IRolesService;
 import control.asistencia.QRCheck.services.iterfaces.IUsuarioService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,34 +79,20 @@ public class UsuarioController {
         return "usuario/index";
     }
 
-
-    // Maneja las solicitudes GET a la ruta "usuarios/create".
     @GetMapping("/create")
     public String showCreateForm(Model model) {
 
-        // Añado un nuevo objeto Usuario al modelo para ser utilizado en el formulario de creación.
         model.addAttribute("usuario", new Usuario());
-
-        // Añado una lista de todas las empresas al modelo para ser utilizada al momento de crear
-        // un usuario y seleccionar a la empresa que perteneces.
         model.addAttribute("empresas", empresaService.obtenerTodos());
-
-        // Añado una lista de todos los roles al modelo para ser utilizada al momento de crear un
-        // usuario y asignarle un rol.
         model.addAttribute("roles", rolesService.obtenerTodos());
 
-        // Devuelvo la vista "usuario/create" para mostrar el formulario de creación.
         return "usuario/create";
     }
 
-
-    // Maneja las solicitudes POST a la ruta "usuarios/save".
     @PostMapping("/save")
     public String saveUsuario(@ModelAttribute("usuario") Usuario usuario, BindingResult result) {
 
-        // Verifico si hay errores en el formulario.
         if (result.hasErrors()) {
-            // Si hay errores, vuelvo al formulario de creación.
             return "usuario/create";
         }
 
@@ -137,33 +123,28 @@ public class UsuarioController {
             return "usuario/create";
         }
 
-        // Asigno la empresa al usuario.
         usuario.setEmpresa(empresa);
 
-        // Busco el rol seleccionado en la base de datos por su ID.
         Roles role = rolesService.buscarPorId(usuario.getRol().get(0).getId())
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-// Asigno el rol al usuario. Asegúrate de que `usuario.getRol()` no sea `null` o vacío.
         if (usuario.getRol() == null) {
             usuario.setRol(new ArrayList<>());
         }
         usuario.getRol().clear(); // Limpiamos la lista existente.
         usuario.getRol().add(role); // Añadimos el rol encontrado.
 
+// Encriptar la contraseña antes de guardarla
+//        +
 
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
 
+        
         // Redirijo a la lista de usuarios después de guardar.
         return "redirect:/usuarios";
     }
 
-
-    /**
-     * Maneja las solicitudes GET a la ruta "usuarios/details/{id}".
-     * Este método muestra los detalles de usuario específico
-     **/
     @GetMapping("/details/{id}")
     public String details(@PathVariable("id") Integer id, Model model) {
 
@@ -177,45 +158,29 @@ public class UsuarioController {
         return "usuario/details";
     }
 
-    /**
-     *  Maneja las solicitudes GET a la ruta "usuarios/edit/{id}".
-     *  Este método muestra el formulario para editar un usuario existente.
-     **/
+
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
 
         // Busco el usuario en la base de datos por su ID.
         Optional<Usuario> optionalUsuario = usuarioService.buscarPorId(id);
 
-        /**
-         *  Añado una lista de todos los roles al modelo para ser utilizados al momento de editar un
-         *  usuario y cambiarle el rol asignado.
-         **/
+
         model.addAttribute("roles", rolesService.obtenerTodos());
 
         // Verifico si el usuario existe.
         if (!optionalUsuario.isPresent()) {
-            // Si el usuario no existe, redirijo a la lista de usuarios.
             return "redirect:/usuario";
         }
-
-        // Si el usuario no existe, redirijo a la lista de usuarios.
         Usuario usuario = optionalUsuario.get();
         model.addAttribute("usuario", usuario);
-
-        /**
-         *  Añado una lista de todas las empresas al modelo para ser utilizada al momento de editar
-         *  un usuario y cambiar la empresa a la que pertenece*/
         model.addAttribute("empresas", empresaService.obtenerTodos());
 
         // Devuelvo la vista "usuario/edit" para mostrar el formulario de edición.
         return "usuario/edit";
     }
 
-    /**
-     * Maneja las solicitudes GET a la ruta "usuarios/remove/{id}".
-     * Este método muestra una pantalla para confirmar la eliminación de un usuario.
-     **/
+
     @GetMapping("/remove/{id}")
     public String remove(@PathVariable("id") Integer id, Model model) {
 
