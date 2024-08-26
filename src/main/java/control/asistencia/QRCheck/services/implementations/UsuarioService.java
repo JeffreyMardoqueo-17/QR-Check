@@ -6,12 +6,16 @@ import control.asistencia.QRCheck.services.iterfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
 public class UsuarioService implements IUsuarioService {
+
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     // Inyecto una instancia de IUsuarioRepository para interactuar con la base de datos.
     @Autowired
@@ -46,6 +50,9 @@ public class UsuarioService implements IUsuarioService {
     // Método para crear o editar un usuario.
     @Override
     public Usuario createOrEditOne(Usuario usuario) {
+
+//        String encodedPassword = passwordEncoder.encode(usuario.getPass());
+//        usuario.setPass(encodedPassword);
 
         // Verifico si el usuario tiene un ID, lo que indicaría que ya existe.
         if(usuario.getId() != null){
