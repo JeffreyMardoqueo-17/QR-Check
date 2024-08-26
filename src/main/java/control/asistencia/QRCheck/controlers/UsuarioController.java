@@ -139,12 +139,12 @@ public class UsuarioController {
         // Asigno la empresa al usuario.
         usuario.setEmpresa(empresa);
 
-        // Busco el rol seleccionado en la base de datos por su ID.
-        Roles role = rolesService.buscarPorId(usuario.getRol().getId())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-
-        // Asigno el rol al usuario.
-        usuario.setRol(role);
+//        // Busco el rol seleccionado en la base de datos por su ID.
+//        Roles role = rolesService.buscarPorId(usuario.getRol().getId())
+//                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+//
+//        // Asigno el rol al usuario.
+//        usuario.setRol((List<Roles>) role);
 
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
