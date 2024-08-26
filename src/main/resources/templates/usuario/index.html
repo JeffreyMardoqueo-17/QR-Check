@@ -1,7 +1,14 @@
+<!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <!-- Incluye los archivos de CSS y JavaScript necesarios para SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
 <div layout:fragment="content">
     <!-- Mostrar mensaje de confirmación en caso de éxito -->
@@ -47,23 +54,26 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${usuarios}">
+        <tr th:each="item : ${usuarios.content}">
             <td th:text="${item.id}"></td>
             <td th:text="${item.nombre}"></td>
             <td th:text="${item.apellido}"></td>
             <td th:text="${item.email}"></td>
-            <td th:text="${item.rol.nombre}"></td>
+            <td>
+                <!-- Iterar sobre la lista de roles si el usuario tiene roles -->
+                <span th:each="rol : ${item.rol}" th:text="${rol.nombre}"></span>
+            </td>
             <td th:text="${item.latitud}"></td>
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.fechaCreacion}"></td>
             <td th:text="${item.fechaModificacion}"></td>
-            <td th:text="${item.creadoPor.nombre}"></td>
-            <td th:text="${item.modificadoPor.nombre}"></td>
-            <td th:text="${item.empresa.nombre}"></td>
+            <td th:text="${item.creadoPor != null ? item.creadoPor.nombre : 'N/A'}"></td>
+            <td th:text="${item.modificadoPor != null ? item.modificadoPor.nombre : 'N/A'}"></td>
+            <td th:text="${item.empresa != null ? item.empresa.nombre : 'N/A'}"></td>
             <td>
-                <a th:href="@{/usuarios/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
-                <a th:href="@{/usuarios/edit/{id} (id = ${item.id}) }" class="btn btn-outline-info">Editar</a> |
-                <a th:href="@{/usuarios/remove/{id} (id = ${item.id}) }" class="btn btn-outline-danger">Eliminar</a>
+                <a th:href="@{/usuarios/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a> |
+                <a th:href="@{/usuarios/edit/{id}(id=${item.id})}" class="btn btn-outline-info">Editar</a> |
+                <a th:href="@{/usuarios/remove/{id}(id=${item.id})}" class="btn btn-outline-danger">Eliminar</a>
             </td>
         </tr>
         </tbody>
@@ -76,7 +86,7 @@
             </li>
         </ul>
     </nav>
-
 </div>
 
 </html>
+
