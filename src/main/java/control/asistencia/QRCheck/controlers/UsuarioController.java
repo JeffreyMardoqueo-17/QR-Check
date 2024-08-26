@@ -4,6 +4,7 @@ import control.asistencia.QRCheck.models.Empresa;
 import control.asistencia.QRCheck.models.Roles;
 import control.asistencia.QRCheck.models.Usuario;
 import control.asistencia.QRCheck.services.iterfaces.IEmpresaService;
+import control.asistencia.QRCheck.services.iterfaces.IRolesService;
 import control.asistencia.QRCheck.services.iterfaces.IUsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,101 +23,220 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+// Indica que es un controlador
 @Controller
+
+// Mapea todas las solicitudes que empiezan con usuarios a este controlador
 @RequestMapping("usuarios")
 public class UsuarioController {
+
+    // Inyecta automáticamente una instancia de IUsuarioService en esta clase.
     @Autowired
     private IUsuarioService usuarioService;
 
+    // Inyecta automáticamente una instancia de IEmpresaService en esta clase.
     @Autowired
     private IEmpresaService empresaService;
 
+    // Inyecta automáticamente una instancia de IRolesService en esta clase.
+    @Autowired
+    private IRolesService rolesService;
+
+
+    // Maneja las solicitudes GET a la ruta "usuarios".
     @GetMapping
     public String index(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        // Pagina la lista de empresas, mostrando 5 por defecto.
-        int currentPage = page.orElse(1) - 1; // Si no se elige la página, se va a la primera.
-        int pageSize = size.orElse(5); // Si no se elige el tamaño, se muestran 5 empresas.
+
+        // La numeración de páginas empieza en 0, por eso se resta 1.
+        int currentPage = page.orElse(1) - 1;
+
+        // Obtengo el tamaño de la página solicitada, o 5 si no se proporciona.
+        int pageSize = size.orElse(5); // Se define cuántos elementos se mostrarán por página.
+
+        // Creo un objeto Pageable para manejar la paginación.
         Pageable pageable = PageRequest.of(currentPage, pageSize);
 
-        // Busca todas las empresas de forma paginada.
+        // Obtengo una lista paginada de usuarios desde el servicio.
         Page<Usuario> usuarios = usuarioService.buscarTodosPaginados(pageable);
+
+        // Añado la lista de usuarios paginada al modelo para pasarla a la vista.
         model.addAttribute("usuarios", usuarios);
 
-        // Calcula el total de páginas y las muestra.
+        // Calculo el número total de páginas.
         int totalPages = usuarios.getTotalPages();
         if (totalPages > 0) {
+            // Creo una lista de números de página del 1 al total de páginas.
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());
+
+            // Añado la lista de números de página al modelo para que la vista pueda mostrarlos.
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        // Devuelvo la vista "usuario/index" para mostrar la lista de usuarios.
         return "usuario/index";
     }
 
 
+    // Maneja las solicitudes GET a la ruta "usuarios/create".
     @GetMapping("/create")
     public String showCreateForm(Model model) {
+
+        // Añado un nuevo objeto Usuario al modelo para ser utilizado en el formulario de creación.
         model.addAttribute("usuario", new Usuario());
+
+        // Añado una lista de todas las empresas al modelo para ser utilizada al momento de crear
+        // un usuario y seleccionar a la empresa que perteneces.
         model.addAttribute("empresas", empresaService.obtenerTodos());
+
+        // Añado una lista de todos los roles al modelo para ser utilizada al momento de crear un
+        // usuario y asignarle un rol.
+        model.addAttribute("roles", rolesService.obtenerTodos());
+
+        // Devuelvo la vista "usuario/create" para mostrar el formulario de creación.
         return "usuario/create";
     }
 
 
-    // Este método guarda una nueva empresa después de que el usuario llena el formulario.
-   /* @PostMapping("/save")
-    public String save(Usuario usuario, BindingResult result, Model model, RedirectAttributes attributes) {
-        // Si hay algún error en el formulario, no guarda y regresa al formulario.
-        if (result.hasErrors()) {
-            model.addAttribute("empresas", empresaService.obtenerTodos());
-            model.addAttribute(usuario);
-            attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
-            return "usuario/create";
-        }
-
-        // Guarda o edita la empresa y muestra un mensaje de éxito.
-        usuarioService.createOrEditOne(usuario);
-        attributes.addFlashAttribute("msg", "Usuario creada correctamente");
-        return "redirect:/usuarios";
-    }*/
-
+    // Maneja las solicitudes POST a la ruta "usuarios/save".
     @PostMapping("/save")
     public String saveUsuario(@ModelAttribute("usuario") Usuario usuario, BindingResult result) {
-        if (result.hasErrors()) {
-            return "usuario/create"; // Volver al formulario si hay errores
-        }
 
-        // Busca un usuario existente en la base de datos para asignarlo a creadoPor y modificadoPor
-        Usuario usuarioPorDefecto = usuarioService.buscarPorId(1).get();
-        if (usuarioPorDefecto == null) {
-            // Manejar el caso en que el usuario no sea encontrado, si es necesario
-            // Por ejemplo, lanzar una excepción o devolver un mensaje de error
+        // Verifico si hay errores en el formulario.
+        if (result.hasErrors()) {
+            // Si hay errores, vuelvo al formulario de creación.
             return "usuario/create";
         }
 
+        // Obtengo un usuario por defecto desde la base de datos con el ID 1.
+        Usuario usuarioPorDefecto = usuarioService.buscarPorId(1).get();
+        if (usuarioPorDefecto == null) { // Verifico si el usuario por defecto existe.
+            // Si no existe, regreso al formulario de creación.
+            return "usuario/create";
+        }
+
+        // Asigno el usuario por defecto como creador y modificador del nuevo usuario.
         usuario.setCreadoPor(usuarioPorDefecto);
         usuario.setModificadoPor(usuarioPorDefecto);
 
-        // Asignar fecha de creación y modificación si es necesario
+        // Asigno la fecha actual como fecha de creación y modificación del nuevo usuario.
         usuario.setFechaCreacion(LocalDateTime.now());
         usuario.setFechaModificacion(LocalDateTime.now());
 
-        // Busca la empresa en la base de datos y la asigna al usuario
+        // Busco la empresa seleccionada en la base de datos por su ID.
         Optional<Empresa> optionalEmpresa = empresaService.buscarPorId(usuario.getEmpresa().getId());
+
+        // Si no se encuentra la empresa, lanzo una excepción.
         Empresa empresa = optionalEmpresa.orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
+        // Verifico si la empresa existe.
         if (empresa == null) {
-            // Manejar el caso en que la empresa no sea encontrada, si es necesario
+            // Si no existe, regreso al formulario de creación.
             return "usuario/create";
         }
+
+        // Asigno la empresa al usuario.
         usuario.setEmpresa(empresa);
 
+        // Busco el rol seleccionado en la base de datos por su ID.
+        Roles role = rolesService.buscarPorId(usuario.getRol().getId())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        // Asigno el rol al usuario.
+        usuario.setRol(role);
+
+        // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
+
+        // Redirijo a la lista de usuarios después de guardar.
         return "redirect:/usuarios";
     }
 
 
+    /**
+     * Maneja las solicitudes GET a la ruta "usuarios/details/{id}".
+     * Este método muestra los detalles de usuario específico
+     **/
+    @GetMapping("/details/{id}")
+    public String details(@PathVariable("id") Integer id, Model model) {
 
+        // Busco un usuario por su ID en la base de datos.
+        Usuario usuario = usuarioService.buscarPorId(id).orElse(null);
+
+        // Añado el usuario al modelo para mostrar sus detalles en la vista.
+        model.addAttribute("usuario", usuario);
+
+        // Devuelvo la vista "usuario/details" para mostrar los detalles del usuario.
+        return "usuario/details";
+    }
+
+    /**
+     *  Maneja las solicitudes GET a la ruta "usuarios/edit/{id}".
+     *  Este método muestra el formulario para editar un usuario existente.
+     **/
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Integer id, Model model) {
+
+        // Busco el usuario en la base de datos por su ID.
+        Optional<Usuario> optionalUsuario = usuarioService.buscarPorId(id);
+
+        /**
+         *  Añado una lista de todos los roles al modelo para ser utilizados al momento de editar un
+         *  usuario y cambiarle el rol asignado.
+         **/
+        model.addAttribute("roles", rolesService.obtenerTodos());
+
+        // Verifico si el usuario existe.
+        if (!optionalUsuario.isPresent()) {
+            // Si el usuario no existe, redirijo a la lista de usuarios.
+            return "redirect:/usuario";
+        }
+
+        // Si el usuario no existe, redirijo a la lista de usuarios.
+        Usuario usuario = optionalUsuario.get();
+        model.addAttribute("usuario", usuario);
+
+        /**
+         *  Añado una lista de todas las empresas al modelo para ser utilizada al momento de editar
+         *  un usuario y cambiar la empresa a la que pertenece*/
+        model.addAttribute("empresas", empresaService.obtenerTodos());
+
+        // Devuelvo la vista "usuario/edit" para mostrar el formulario de edición.
+        return "usuario/edit";
+    }
+
+    /**
+     * Maneja las solicitudes GET a la ruta "usuarios/remove/{id}".
+     * Este método muestra una pantalla para confirmar la eliminación de un usuario.
+     **/
+    @GetMapping("/remove/{id}")
+    public String remove(@PathVariable("id") Integer id, Model model) {
+
+        // Busco un usuario por su ID en la base de datos.
+        Usuario usuario = usuarioService.buscarPorId(id).orElse(null);
+
+        // Añado el usuario al modelo para confirmar su eliminación.
+        model.addAttribute("usuario", usuario);
+
+        // Devuelvo la vista "usuario/delete" para confirmar la eliminación del usuario.
+        return "usuario/delete";
+    }
+
+
+    // Maneja las solicitudes POST a la ruta "usuarios/delete".
+    @PostMapping("/delete")
+    public String delete(@RequestParam("id") Long id, Usuario usuario, RedirectAttributes redirectAttributes) {
+
+        // Elimino el usuario de la base de datos usando su ID.
+        usuarioService.eliminarPorId(usuario.getId());
+
+        // Añado un mensaje de éxito que se mostrará en la vista siguiente.
+        redirectAttributes.addFlashAttribute("success", "Usuario eliminado exitosamente.");
+
+        // Redirijo a la lista de usuarios después de eliminar.
+        return "redirect:/usuarios";
+    }
 
 
 }

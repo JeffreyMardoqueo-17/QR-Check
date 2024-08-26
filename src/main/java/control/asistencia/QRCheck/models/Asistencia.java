@@ -36,7 +36,7 @@ public class Asistencia {
     public Asistencia() {
     }
 
-    // Getters y Setters
+    // Getters y Setterss
 
     public Integer getId() {
         return id;

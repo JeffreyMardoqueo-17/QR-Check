@@ -4,10 +4,9 @@
       layout:decorate="/layouts/_mainLayout">
 
 <div layout:fragment="content">
-    <h1>Eliminar Usuario</h1>
-    <h3>¿Está seguro que desea eliminar este usuario?</h3>
+    <h1>Detalles del Usuario</h1>
     <div>
-        <hr />
+        <hr /> <!---->
         <dl class="row">
             <dt class="col-sm-2">ID</dt>
             <dd class="col-sm-10" th:text="${usuario.id}"></dd>
@@ -29,13 +28,24 @@
 
             <dt class="col-sm-2">Longitud</dt>
             <dd class="col-sm-10" th:text="${usuario.longitud}"></dd>
+
+            <dt class="col-sm-2">Fecha de Creación</dt>
+            <dd class="col-sm-10" th:text="${usuario.fechaCreacion}"></dd>
+
+            <dt class="col-sm-2">Fecha de Modificación</dt>
+            <dd class="col-sm-10" th:text="${usuario.fechaModificacion}"></dd>
+
+            <dt class="col-sm-2">Creado Por</dt>
+            <dd class="col-sm-10" th:text="${usuario.creadoPor}"></dd>
+
+            <dt class="col-sm-2">Modificado Por</dt>
+            <dd class="col-sm-10" th:text="${usuario.modificadoPor}"></dd>
+
+            <dt class="col-sm-2">Empresa</dt>
+            <dd class="col-sm-10" th:text="${usuario.empresa.nombre}"></dd>
         </dl>
 
-        <form th:action="@{/usuarios/delete}" method="post">
-            <input type="hidden" name="id" th:value="${usuario.id}">
-            <input type="submit" value="Eliminar" class="btn btn-danger"> |
-            <a th:href="@{/usuario}">Regresar</a>
-        </form>
+        <a th:href="@{/usuario}" class="btn btn-info">Regresar</a>
     </div>
 </div>
 </html>
