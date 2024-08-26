@@ -4,11 +4,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
 
-<head>
-    <!-- Incluye los archivos de CSS y JavaScript necesarios para SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css">
 
 <div layout:fragment="content">
     <!-- Mostrar mensaje de confirmación en caso de éxito -->
@@ -33,47 +30,32 @@
         </script>
     </div>
 
-    <h1>Listado de Usuarios</h1>
-    <a th:href="@{/usuarios/create}" class="btn btn-outline-primary">Nuevo Usuario</a>
-    <table class="table table-striped">
-        <thead>
+    <h1 class="my-4">Listado de Usuarios</h1>
+    <a th:href="@{/usuarios/create}" class="btn btn-success mb-3"><i class="fa-solid fa-plus"></i> Nuevo Usuario</a>
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
             <th>Rol</th>
-            <th>Latitud</th>
-            <th>Longitud</th>
-            <th>Fecha Creación</th>
-            <th>Fecha Modificación</th>
-            <th>Creado Por</th>
-            <th>Modificado Por</th>
             <th>Empresa</th>
             <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="item : ${usuarios.content}">
-            <td th:text="${item.id}"></td>
             <td th:text="${item.nombre}"></td>
             <td th:text="${item.apellido}"></td>
             <td th:text="${item.email}"></td>
             <td>
-                <!-- Iterar sobre la lista de roles si el usuario tiene roles -->
                 <span th:each="rol : ${item.rol}" th:text="${rol.nombre}"></span>
             </td>
-            <td th:text="${item.latitud}"></td>
-            <td th:text="${item.longitud}"></td>
-            <td th:text="${item.fechaCreacion}"></td>
-            <td th:text="${item.fechaModificacion}"></td>
-            <td th:text="${item.creadoPor != null ? item.creadoPor.nombre : 'N/A'}"></td>
-            <td th:text="${item.modificadoPor != null ? item.modificadoPor.nombre : 'N/A'}"></td>
             <td th:text="${item.empresa != null ? item.empresa.nombre : 'N/A'}"></td>
             <td>
-                <a th:href="@{/usuarios/details/{id}(id=${item.id})}" class="btn btn-outline-secondary">Detalles</a> |
-                <a th:href="@{/usuarios/edit/{id}(id=${item.id})}" class="btn btn-outline-info">Editar</a> |
-                <a th:href="@{/usuarios/remove/{id}(id=${item.id})}" class="btn btn-outline-danger">Eliminar</a>
+                <a th:href="@{/usuarios/details/{id}(id=${item.id})}" class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Detalles</a>
+                <a th:href="@{/usuarios/edit/{id}(id=${item.id})}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i> Editar</a>
+                <a th:href="@{/usuarios/remove/{id}(id=${item.id})}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Eliminar</a>
             </td>
         </tr>
         </tbody>
@@ -89,4 +71,3 @@
 </div>
 
 </html>
-

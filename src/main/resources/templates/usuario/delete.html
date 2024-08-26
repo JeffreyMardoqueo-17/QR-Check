@@ -33,8 +33,8 @@
 
         <form th:action="@{/usuarios/delete}" method="post">
             <input type="hidden" name="id" th:value="${usuario.id}">
-            <input type="submit" value="Eliminar" class="btn btn-danger"> |
-            <a th:href="@{/usuario}">Regresar</a>
+            <input type="submit" value="Eliminar" class="btn btn-danger">
+            <a th:href="@{/usuarios}" class="btn btn-secondary">Regresar</a>
         </form>
     </div>
 </div>
