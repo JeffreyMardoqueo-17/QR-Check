@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -11,62 +13,60 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id") // Asegúrate de que el nombre de la columna coincida con la base de datos
     private Integer id;
 
     @NotNull(message = "El nombre es requerido")
-    @Column(name = "Nombre", length = 100, nullable = false)
+    @Column(name = "nombre", length = 100, nullable = false)
     private String nombre;
 
     @NotNull(message = "El apellido es requerido")
-    @Column(name = "Apellido", length = 100, nullable = false)
+    @Column(name = "apellido", length = 100, nullable = false)
     private String apellido;
 
     @NotNull(message = "El email es requerido")
     @Email(message = "Debe ser un email válido")
-    @Column(name = "Email", length = 100, nullable = false, unique = true)
+    @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
     @NotNull(message = "La contraseña es requerida")
-    @Column(name = "Pass", length = 255, nullable = false)
+    @Column(name = "pass", length = 255, nullable = false)
     private String pass;
 
-    @NotNull(message = "El rol es requerido")
-    @ManyToOne
-    @JoinColumn(name = "IdRoles", nullable = false)
-    private Roles rol;
+
+    private Integer status;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_rol",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private List<Roles> rol;
 
     @NotNull(message = "La latitud es requerida")
-    @Column(name = "Latitud", nullable = false)
+    @Column(name = "latitud", nullable = false)
     private Double latitud;
 
     @NotNull(message = "La longitud es requerida")
-    @Column(name = "Longitud", nullable = false)
+    @Column(name = "longitud", nullable = false)
     private Double longitud;
 
-    @Column(name = "FechaCreacion", nullable = false, updatable = false)
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @Column(name = "FechaModificacion")
+    @Column(name = "fecha_modificacion")
     private LocalDateTime fechaModificacion;
 
     @ManyToOne
-    @JoinColumn(name = "CreadoPor", nullable = false)
+    @JoinColumn(name = "creado_por", nullable = false)
     private Usuario creadoPor;
 
     @ManyToOne
-    @JoinColumn(name = "ModificadoPor")
+    @JoinColumn(name = "modificado_por")
     private Usuario modificadoPor;
 
     @ManyToOne
-    @JoinColumn(name = "IdEmpresa", nullable = true)
+    @JoinColumn(name = "id_empresa", nullable = true)
     private Empresa empresa;
-
-    // Constructor vacío
-    public Usuario() {
-    }
-
-    // Getters y Setters
 
     public Integer getId() {
         return id;
@@ -76,59 +76,67 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getNombre() {
+    public @NotNull(message = "El nombre es requerido") String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(@NotNull(message = "El nombre es requerido") String nombre) {
         this.nombre = nombre;
     }
 
-    public String getApellido() {
+    public @NotNull(message = "El apellido es requerido") String getApellido() {
         return apellido;
     }
 
-    public void setApellido(String apellido) {
+    public void setApellido(@NotNull(message = "El apellido es requerido") String apellido) {
         this.apellido = apellido;
     }
 
-    public String getEmail() {
+    public @NotNull(message = "El email es requerido") @Email(message = "Debe ser un email válido") String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotNull(message = "El email es requerido") @Email(message = "Debe ser un email válido") String email) {
         this.email = email;
     }
 
-    public String getPass() {
+    public @NotNull(message = "La contraseña es requerida") String getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(@NotNull(message = "La contraseña es requerida") String pass) {
         this.pass = pass;
     }
 
-    public Roles getRol() {
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<Roles> getRol() {
         return rol;
     }
 
-    public void setRol(Roles rol) {
+    public void setRol(List<Roles> rol) {
         this.rol = rol;
     }
 
-    public Double getLatitud() {
+    public @NotNull(message = "La latitud es requerida") Double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(Double latitud) {
+    public void setLatitud(@NotNull(message = "La latitud es requerida") Double latitud) {
         this.latitud = latitud;
     }
 
-    public Double getLongitud() {
+    public @NotNull(message = "La longitud es requerida") Double getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(Double longitud) {
+    public void setLongitud(@NotNull(message = "La longitud es requerida") Double longitud) {
         this.longitud = longitud;
     }
 
@@ -171,4 +179,6 @@ public class Usuario {
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
+
+
 }

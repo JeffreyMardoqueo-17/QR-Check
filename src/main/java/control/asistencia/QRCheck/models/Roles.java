@@ -3,7 +3,7 @@ package control.asistencia.QRCheck.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
+import java.util.List;
 @Entity
 @Table(name = "roles")
 public class Roles {
@@ -17,6 +17,9 @@ public class Roles {
     @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres")
     @Column(name = "Nombre", length = 50)
     private String nombre;
+
+    @OneToMany(mappedBy = "rol")
+    private List<Usuario> usuarios;
 
     // Getters y Setters
 

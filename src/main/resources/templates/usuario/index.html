@@ -52,13 +52,15 @@
             <td th:text="${item.nombre}"></td>
             <td th:text="${item.apellido}"></td>
             <td th:text="${item.email}"></td>
-            <td th:text="${item.rol}"></td>
+            <td>
+                <span th:each="rol : ${item.rol}" th:text="${rol.nombre}"></span>
+            </td>
             <td th:text="${item.latitud}"></td>
             <td th:text="${item.longitud}"></td>
             <td th:text="${item.fechaCreacion}"></td>
             <td th:text="${item.fechaModificacion}"></td>
-            <td th:text="${item.creadoPor}"></td>
-            <td th:text="${item.modificadoPor}"></td>
+            <td th:text="${item.creadoPor.nombre}"></td>
+            <td th:text="${item.modificadoPor.nombre}"></td>
             <td th:text="${item.empresa.nombre}"></td>
             <td>
                 <a th:href="@{/usuarios/details/{id} (id = ${item.id}) }" class="btn btn-outline-secondary">Detalles</a> |
