@@ -4,78 +4,6 @@
       layout:decorate="/layouts/_mainLayout">
 <head>
     <title>Generador de Código QR</title>
-    <!-- Custom CSS -->
-   <style>
-       body {
-    background-color: #f8f9fa;
-}
-
-.qr-generator-container {
-    margin-top: 50px;
-    max-width: 600px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-}
-
-h1 {
-    font-size: 2rem;
-    color: #343a40;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.form-label {
-    font-weight: bold;
-    color: #495057;
-}
-
-.form-control {
-    border-radius: 10px;
-    padding: 15px;
-}
-
-.btn-generate {
-    background-color: #000000; /* Botón negro */
-    color: #ffffff; /* Texto en blanco */
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    border: none; /* Sin borde */
-    display: block; /* Para centrar el botón */
-    margin: 20px auto;
-}
-
-.btn-generate:hover {
-    background-color: #212121;
-    color: #ffff;
-}
-.btn-generate:focus {
-    background-color: #343333;
-    color: #ffff;
-}
-.qr-code-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.qr-code-container img {
-    border: 2px solid #dee2e6;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #ffffff;
-}
-
-.error-message {
-    color: #dc3545;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-}
-
-   </style>
 </head>
 <body>
 <div class="container qr-generator-container" layout:fragment="content">
@@ -102,5 +30,6 @@ h1 {
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="../../static/js/scanQRCode.js"></script>
 </body>
 </html>

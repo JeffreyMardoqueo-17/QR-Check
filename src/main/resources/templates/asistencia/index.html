@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
 
 <head>
@@ -14,23 +15,32 @@
 <div layout:fragment="content">
     <div class="container mt-4">
         <h1>Lista de Asistencias</h1>
+
+            <a th:href="@{/generarQRAsistencia}" class="btn btn-primary">Ver QR</a>
+
         <div class="card">
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nombre</th>
+                        <th>Nombre del Usuario</th>
                         <th>Fecha</th>
-                        <th>Estado</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                        <th>Dentro del Rango</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="asistencia : ${asistencias}">
-                        <td th:text="${asistencia.id}"></td>
-                        <td th:text="${asistencia.nombre}"></td>
+                        <td th:text="${asistencia.Id}"></td>
+                        <td th:text="${asistencia.usuario.nombre}"></td>
                         <td th:text="${asistencia.fecha}"></td>
-                        <td th:text="${asistencia.estado}"></td>
+                        <td th:text="${asistencia.horaEntrada}"></td>
+                        <td th:text="${asistencia.horaSalida}"></td>
+                        <td th:text="${asistencia.dentroDelRango} ? 'Sí' : 'No'"></td>
+
                     </tr>
                     </tbody>
                 </table>

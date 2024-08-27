@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escanear Código QR</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        #qr-reader {
+            width: 100%;
+            height: 400px; /* Ajustar el tamaño según tus necesidades */
+        }
+        #qr-reader-results {
+            margin-top: 20px;
+        }
+        #retry-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container qr-scanner-container">
+    <h1>Escanear Código QR</h1>
+    <div id="qr-reader"></div>
+    <div id="qr-reader-results">
+        <p id="result">Esperando escaneo...</p>
+    </div>
+    <button id="retry-button" class="btn btn-primary" style="display: none;">Volver a Escanear</button>
+</div>
+
+<script src="/js/scanQRCode.js"></script> <!-- Ruta relativa al archivo JS -->
+</body>
+</html>
