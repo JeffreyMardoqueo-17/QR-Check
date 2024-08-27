@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+<head>
+    <title>Generador de Código QR</title>
+</head>
+<body>
+<div class="container qr-generator-container" layout:fragment="content">
+    <h1>Generador de Código QR</h1>
+    <form method="get" action="/generateQR">
+        <div class="form-group">
+            <label for="text" class="form-label">Texto para el QR:</label>
+            <input type="text" id="text" name="text" class="form-control" placeholder="Ingrese el texto" required>
+        </div>
+        <button type="submit" class="btn btn-generate btn-block">Generar QR</button>
+    </form>
+
+    <!-- Mostrar imagen solo si hay código QR -->
+    <div class="qr-code-container" th:if="${qrCode}">
+        <h5>Código QR generado:</h5>
+        <img th:src="'data:image/png;base64,' + ${qrCode}" alt="Código QR" />
+    </div>
+
+    <!-- Mostrar mensaje de error si ocurre algún problema -->
+    <p class="error-message" th:if="${error}" th:text="${error}"></p>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="../../static/js/scanQRCode.js"></script>
+</body>
+</html>

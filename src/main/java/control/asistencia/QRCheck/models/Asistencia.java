@@ -15,7 +15,7 @@ public class Asistencia {
     private Integer id;
 
     @NotNull(message = "El usuario es requerido")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // Usa LAZY para evitar cargar innecesariamente
     @JoinColumn(name = "UsuarioID", nullable = false)
     private Usuario usuario;
 
@@ -34,6 +34,16 @@ public class Asistencia {
 
     // Constructor vacío
     public Asistencia() {
+    }
+
+    // Constructor con parámetros
+    public Asistencia(Integer id, Usuario usuario, LocalDate fecha, LocalTime horaEntrada, LocalTime horaSalida, Boolean dentroDelRango) {
+        this.id = id;
+        this.usuario = usuario;
+        this.fecha = fecha;
+        this.horaEntrada = horaEntrada;
+        this.horaSalida = horaSalida;
+        this.dentroDelRango = dentroDelRango;
     }
 
     // Getters y Setters

@@ -102,7 +102,7 @@ public class Usuario {
         return pass;
     }
 
-    
+
     public void setPass(@NotNull(message = "La contraseña es requerida") String pass) {
         this.pass = pass;
     }

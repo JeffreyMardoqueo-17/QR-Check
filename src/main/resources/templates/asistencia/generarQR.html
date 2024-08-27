@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar QR</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div layout:fragment="content" class="container qr-generator-container">
+    <h1>QR de asistencia</h1>
+
+    <!-- Mostrar imagen solo si hay código QR -->
+    <div class="qr-code-container" th:if="${qrCode}">
+        <h5>Código QR generado:</h5>
+        <img th:src="'data:image/png;base64,' + ${qrCode}" alt="Código QR" />
+    </div>
+
+    <!-- Mostrar mensaje de error si ocurre algún problema -->
+    <p class="error-message" th:if="${error}" th:text="${error}"></p>
+
+    <p>Escanea el QR para marcar asistencia.</p>
+</div>
+</body>
+</html>

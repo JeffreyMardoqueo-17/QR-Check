@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/_mainLayout">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>QR Code de Asistencia</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <h1>QR Code de Asistencia</h1>
+        <div class="card">
+            <div class="card-body">
+                <p>Escanea el código QR para registrar tu asistencia:</p>
+                <div class="text-center">
+                    <img src="data:image/png;base64,${qrCode}" alt="QR Code" class="img-fluid"/>
+                </div>
+                <form action="/asistencias/marcar" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-primary">Marcar Asistencia</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
