@@ -138,6 +138,9 @@ public class UsuarioController {
         usuario.getRol().clear(); // Limpiamos la lista existente.
         usuario.getRol().add(role); // Añadimos el rol encontrado.
 
+        // Determina si el usuario es nuevo o existente.
+        boolean isNew = (usuario.getId() == null);
+
         if(usuario.getPass() != null && !usuario.getPass().isEmpty()){
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             usuario.setPass(encoder.encode(usuario.getPass()));
@@ -152,10 +155,11 @@ public class UsuarioController {
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
 
-        if (usuario.getId() != null && usuario.getId() > 0){
-            attributes.addFlashAttribute("msg", "Usuario editado correctamente.");
-        } else{
+        // Asignar el mensaje basado en si el usuario es nuevo o editado.
+        if (isNew) {
             attributes.addFlashAttribute("msg", "Usuario creado correctamente.");
+        } else {
+            attributes.addFlashAttribute("msg", "Usuario editado correctamente.");
         }
 
         return "redirect:/usuarios";
