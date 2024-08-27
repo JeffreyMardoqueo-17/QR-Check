@@ -63,11 +63,6 @@
             </div>
         </div>
 
-        <!-- <label for="empresas">Empresa</label>
-                    <select id="empresas" class="form-control" th:field="*{empresa}">
-                        <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
-                    </select>-->
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -79,7 +74,6 @@
             </div>
         </div>
 
-        <hr>
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
         <a th:href="@{/usuarios}" class="btn btn-secondary">Regresar</a>
     </form>

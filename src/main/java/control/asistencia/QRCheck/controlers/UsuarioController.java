@@ -95,7 +95,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public String saveUsuario(@ModelAttribute("usuario") Usuario usuario, BindingResult result) {
+    public String saveUsuario(@ModelAttribute("usuario") Usuario usuario,
+                              BindingResult result, RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
             return "usuario/create";
@@ -104,8 +105,6 @@ public class UsuarioController {
         // Obtengo un usuario por defecto desde la base de datos con el ID 1.
         Usuario usuarioPorDefecto = usuarioService.buscarPorId(1).get();
         if (usuarioPorDefecto == null) { // Verifico si el usuario por defecto existe.
-            // Si no existe, regreso al formulario de creación.
-            return "usuario/create";
         }
 
         // Asigno el usuario por defecto como creador y modificador del nuevo usuario.
@@ -124,7 +123,6 @@ public class UsuarioController {
 
         // Verifico si la empresa existe.
         if (empresa == null) {
-            // Si no existe, regreso al formulario de creación.
             return "usuario/create";
         }
 
@@ -134,19 +132,32 @@ public class UsuarioController {
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         if (usuario.getRol() == null) {
+            attributes.addFlashAttribute("error", "Rol no encontrado." );
             usuario.setRol(new ArrayList<>());
         }
         usuario.getRol().clear(); // Limpiamos la lista existente.
         usuario.getRol().add(role); // Añadimos el rol encontrado.
 
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        usuario.setPass(encoder.encode(usuario.getPass()));
+        if(usuario.getPass() != null && !usuario.getPass().isEmpty()){
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            usuario.setPass(encoder.encode(usuario.getPass()));
+        } else{
+            //no codificamos la contraseña si no se ha modificado
+            Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            usuario.setPass(usuarioExistente.getPass()); //se mantiene la contraseña actual
+        }
+
 
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
 
+        if (usuario.getId() != null && usuario.getId() > 0){
+            attributes.addFlashAttribute("msg", "Usuario editado correctamente.");
+        } else{
+            attributes.addFlashAttribute("msg", "Usuario creado correctamente.");
+        }
 
-        // Redirijo a la lista de usuarios después de guardar.
         return "redirect:/usuarios";
     }
 
@@ -202,13 +213,13 @@ public class UsuarioController {
 
     // Maneja las solicitudes POST a la ruta "usuarios/delete".
     @PostMapping("/delete")
-    public String delete(@RequestParam("id") Long id, Usuario usuario, RedirectAttributes redirectAttributes) {
+    public String delete(@RequestParam("id") Long id, Usuario usuario, RedirectAttributes attributes) {
 
         // Elimino el usuario de la base de datos usando su ID.
         usuarioService.eliminarPorId(usuario.getId());
 
         // Añado un mensaje de éxito que se mostrará en la vista siguiente.
-        redirectAttributes.addFlashAttribute("success", "Usuario eliminado exitosamente.");
+        attributes.addFlashAttribute("msg", "Usuario eliminado correctamente.");
 
         // Redirijo a la lista de usuarios después de eliminar.
         return "redirect:/usuarios";
