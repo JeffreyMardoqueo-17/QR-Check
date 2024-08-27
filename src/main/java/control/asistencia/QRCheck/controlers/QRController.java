@@ -30,7 +30,7 @@ public class QRController {
         } else {
             model.addAttribute("error", "Texto para el QR es requerido");
         }
-        return "generateQR/index"; // Cambia a la ruta correcta aquí
+        return "generateQR/index";
     }
 
 }

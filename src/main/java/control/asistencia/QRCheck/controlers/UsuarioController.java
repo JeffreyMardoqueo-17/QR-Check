@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -111,8 +112,7 @@ public class UsuarioController {
 
         // Obtengo un usuario por defecto desde la base de datos con el ID 1.
         Usuario usuarioPorDefecto = usuarioService.buscarPorId(1).get();
-        if (usuarioPorDefecto == null) { // Verifico si el usuario por defecto existe.
-            // Si no existe, regreso al formulario de creación.
+        if (usuarioPorDefecto == null) {
             return "usuario/create";
         }
 
@@ -140,11 +140,16 @@ public class UsuarioController {
         usuario.setEmpresa(empresa);
 
         // Busco el rol seleccionado en la base de datos por su ID.
-        Roles role = rolesService.buscarPorId(usuario.getRol().getId())
+        Roles role = rolesService.buscarPorId(usuario.getRol().get(0).getId())
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        // Asigno el rol al usuario.
-        usuario.setRol(role);
+// Asigno el rol al usuario. Asegúrate de que `usuario.getRol()` no sea `null` o vacío.
+        if (usuario.getRol() == null) {
+            usuario.setRol(new ArrayList<>());
+        }
+        usuario.getRol().clear(); // Limpiamos la lista existente.
+        usuario.getRol().add(role); // Añadimos el rol encontrado.
+
 
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
