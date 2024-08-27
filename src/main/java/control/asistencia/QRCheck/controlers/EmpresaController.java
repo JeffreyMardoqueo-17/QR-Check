@@ -4,6 +4,7 @@ import control.asistencia.QRCheck.models.Empresa;
 import control.asistencia.QRCheck.models.Roles;
 import control.asistencia.QRCheck.services.iterfaces.IEmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -99,11 +100,19 @@ public class EmpresaController {
     //    return "empresa/delete :: deleteFragment";
     //}
 
-    // Este método elimina la empresa después de confirmar la eliminación.
     @PostMapping("/delete")
     public String delete(Empresa empresa, RedirectAttributes attributes) {
-        empresaService.eliminarPorId(empresa.getId());
-        attributes.addFlashAttribute("msg", "Empresa eliminada correctamente");
+        try {
+            empresaService.eliminarPorId(empresa.getId());
+            attributes.addFlashAttribute("msg", "Empresa eliminada correctamente");
+        } catch (DataIntegrityViolationException e) {
+            // Si hay una violación de integridad referencial, muestra un mensaje de error
+            attributes.addFlashAttribute("error", "No se puede eliminar la empresa porque está asociada a usuarios.");
+        } catch (Exception e) {
+            // Maneja cualquier otra excepción que pudiera ocurrir
+            attributes.addFlashAttribute("error", "Ocurrió un error al intentar eliminar la empresa.");
+        }
         return "redirect:/empresa";
     }
+
 }
