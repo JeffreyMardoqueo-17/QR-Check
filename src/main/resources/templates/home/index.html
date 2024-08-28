@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es"
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layouts/_mainLayout">
@@ -16,37 +15,35 @@
         }
     </style>
 </head>
-
-<body>
 <div layout:fragment="content">
     <h1>Página Principal</h1>
     <div id="map"></div>
+
+    <script>
+        alert("funciona")
+        document.addEventListener('DOMContentLoaded', function() {
+            var lat = 13.691680685845323; // Latitud
+            var lng = -89.81832281836418; // Longitud
+
+            // Inicializa el mapa en el div con ID 'map'
+            var map = L.map('map').setView([lat, lng], 13);
+
+            // Carga los tiles del mapa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Añade un marcador en la ubicación especificada
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup('Ubicación específica')
+                .openPopup();
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Asegúrate de que el código se ejecute cuando el DOM esté completamente cargado
-        var lat = 13.691680685845323; // Latitud
-        var lng = -89.81832281836418; // Longitud
-
-        // Inicializa el mapa en el div con ID 'map'
-        var map = L.map('map').setView([lat, lng], 13);
-
-        // Carga los tiles del mapa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Añade un marcador en la ubicación especificada
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup('Ubicación específica')
-            .openPopup();
-    });
-</script>
-</body>
 
 </html>
