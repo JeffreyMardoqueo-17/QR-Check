@@ -96,6 +96,8 @@ public class UsuarioController {
 
     @PostMapping("/save")
     public String saveUsuario(@ModelAttribute("usuario") Usuario usuario,
+                              @RequestParam(value = "currentPassword", required = false) String currentPassword,
+                              @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
                               BindingResult result, RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
@@ -141,14 +143,38 @@ public class UsuarioController {
         // Determina si el usuario es nuevo o existente.
         boolean isNew = (usuario.getId() == null);
 
-        if(usuario.getPass() != null && !usuario.getPass().isEmpty()){
+        if(!isNew && usuario.getPass() != null && !usuario.getPass().isEmpty()){
+
+           //Verificamos la contraseña actual
+            Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
             PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if (!encoder.matches(currentPassword, usuarioExistente.getPass())) {
+                attributes.addFlashAttribute("error", "La contraseña no coincide.");
+                return "redirect:/usuarios/edit/" + usuario.getId();
+            }
+
+            if(!usuario.getPass().equals(confirmPassword)) {
+                attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
+                return "redirect:/usuarios/edit/" + usuario.getId();
+            }
+            
+            //Si la contraseña actual es correcta, encripta y establece la nueva contraseña
             usuario.setPass(encoder.encode(usuario.getPass()));
-        } else{
+        } else if (!isNew){
             //no codificamos la contraseña si no se ha modificado
             Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             usuario.setPass(usuarioExistente.getPass()); //se mantiene la contraseña actual
+        } else if (isNew && (usuario.getPass() != null && !usuario.getPass().isEmpty())) {
+            // Si es un nuevo usuario y se proporciona una contraseña, encripta la contraseña
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            usuario.setPass(encoder.encode(usuario.getPass()));
+        } else if (isNew) {
+            attributes.addFlashAttribute("error", "Debe proporcionar una contraseña.");
+            return "redirect:/usuarios/create";
         }
 
 
