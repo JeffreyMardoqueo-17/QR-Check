@@ -11,32 +11,24 @@
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
                     <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del usuario" required>
-                    <!-- Mostrar error para el campo nombre -->
-                    <div th:if="${#fields.hasErrors('nombre')}" class="alert alert-danger" th:errors="*{nombre}"></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="apellido">Apellido</label>
                     <input type="text" class="form-control" th:field="*{apellido}" id="apellido" placeholder="Escriba el apellido del usuario" required>
-                    <!-- Mostrar error para el campo apellido -->
-                    <div th:if="${#fields.hasErrors('apellido')}" class="alert alert-danger" th:errors="*{apellido}"></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="Escriba el email del usuario" required>
-                    <!-- Mostrar error para el campo email -->
-                    <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger" th:errors="*{email}"></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="pass">Contraseña</label>
                     <input type="password" class="form-control" th:field="*{pass}" id="pass" placeholder="Escriba la contraseña del usuario" required>
-                    <!-- Mostrar error para el campo pass -->
-                    <div th:if="${#fields.hasErrors('pass')}" class="alert alert-danger" th:errors="*{pass}"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -55,23 +47,22 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="longitud">Longitud</label>
-                    <input type="number" step="0.000001" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
                     <label for="empresas">Empresa</label>
                     <select id="empresas" class="form-control" th:field="*{empresa}">
                         <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
                     </select>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="longitud">Longitud</label>
+                    <input type="number" step="0.000001" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario">
+                </div>
+            </div>
         </div>
         <hr>
         <button type="submit" class="btn btn-primary">Guardar</button> |
-        <a th:href="@{/usuarios}" class="btn btn-outline-secondary">Regresar</a>
+        <a th:href="@{/usuarios}">Regresar</a>
     </form>
 </div>
-
 </html>

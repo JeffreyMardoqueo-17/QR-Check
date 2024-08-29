@@ -5,6 +5,7 @@
 
 <div layout:fragment="content">
     <h1>Editar Usuario</h1>
+
     <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="row">
@@ -15,7 +16,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -30,6 +30,40 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="Escriba el email del usuario" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contraseña Actual -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="currentPassword">Contraseña Actual</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Escriba la contraseña actual">
+                    <small class="form-text text-muted">Ingrese la contraseña actual.</small>
+                    <p th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nueva Contraseña -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="password">Nueva Contraseña</label>
+                    <input type="password" class="form-control" th:field="*{pass}" id="password" placeholder="Escriba la nueva contraseña">
+                    <small class="form-text text-muted">Deje este campo vacío si no desea cambiar la contraseña.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmar Nueva Contraseña -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirme la nueva contraseña">
+                    <p th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></p>
                 </div>
             </div>
         </div>
@@ -63,11 +97,6 @@
             </div>
         </div>
 
-        <!-- <label for="empresas">Empresa</label>
-                    <select id="empresas" class="form-control" th:field="*{empresa}">
-                        <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
-                    </select>-->
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -79,9 +108,8 @@
             </div>
         </div>
 
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar cambios</button> |
-        <a th:href="@{/usuarios}">Regresar</a>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a th:href="@{/usuarios}" class="btn btn-secondary">Regresar</a>
     </form>
 </div>
 </html>

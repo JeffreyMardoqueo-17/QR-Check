@@ -1,8 +1,10 @@
 package control.asistencia.QRCheck.controlers;
 
+import control.asistencia.QRCheck.models.Empresa;
 import control.asistencia.QRCheck.models.Roles;
 import control.asistencia.QRCheck.services.iterfaces.IRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -90,8 +92,15 @@ public class RolesController {
 
     @PostMapping("/delete")
     public String delete(Roles roles, RedirectAttributes attributes){
-        rolesService.eliminarPorId(roles.getId());
-        attributes.addFlashAttribute("msg", "Rol eliminado correctamente");
+        try{
+            rolesService.eliminarPorId(roles.getId());
+            attributes.addFlashAttribute("msg", "Rol eliminado correctamente");
+        } catch (DataIntegrityViolationException e) {
+            attributes.addFlashAttribute("error", "No se pudo eliminar el rol porque está asociado a usuarios. ");
+        } catch (Exception e) {
+            // Maneja cualquier otra excepción que pudiera ocurrir
+            attributes.addFlashAttribute("error", "Ocurrió un error al intentar eliminar el rol.");
+        }
         return "redirect:/roles";
     }
 

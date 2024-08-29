@@ -34,8 +34,6 @@ public class Usuario {
     private String pass;
 
 
-    private Integer status;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol",
             joinColumns = @JoinColumn(name = "usuario_id"),
@@ -104,17 +102,11 @@ public class Usuario {
         return pass;
     }
 
+
     public void setPass(@NotNull(message = "La contraseña es requerida") String pass) {
         this.pass = pass;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public List<Roles> getRol() {
         return rol;

@@ -4,6 +4,7 @@ import control.asistencia.QRCheck.models.Departamento;
 import control.asistencia.QRCheck.models.Roles;
 import control.asistencia.QRCheck.services.iterfaces.IDepartamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -95,8 +96,17 @@ public class DepartamentoController {
 
     @PostMapping("/delete")
     public String delete(@RequestParam("id") Integer id, RedirectAttributes attributes) {
-        departamentoService.eliminarPorId(id);
-        attributes.addFlashAttribute("msg", "Departamento eliminado correctamente");
+        try{
+            departamentoService.eliminarPorId(id);
+            attributes.addFlashAttribute("msg", "Departamento eliminado correctamente");
+        } catch (DataIntegrityViolationException e) {
+            attributes.addFlashAttribute("error", "No se pudo eliminar el departamento porque está asociado a usuarios. ");
+        } catch (Exception e) {
+            // Maneja cualquier otra excepción que pudiera ocurrir
+            attributes.addFlashAttribute("error", "Ocurrió un error al intentar eliminar el departamento.");
+        }
+
         return "redirect:/departamentos";
     }
+
 }

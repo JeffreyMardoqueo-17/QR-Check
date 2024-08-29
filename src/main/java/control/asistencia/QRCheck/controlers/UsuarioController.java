@@ -6,7 +6,6 @@ import control.asistencia.QRCheck.models.Usuario;
 import control.asistencia.QRCheck.services.iterfaces.IEmpresaService;
 import control.asistencia.QRCheck.services.iterfaces.IRolesService;
 import control.asistencia.QRCheck.services.iterfaces.IUsuarioService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class UsuarioController {
     // Inyecta automáticamente una instancia de IRolesService en esta clase.
     @Autowired
     private IRolesService rolesService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     // Maneja las solicitudes GET a la ruta "usuarios".
@@ -79,41 +84,29 @@ public class UsuarioController {
         return "usuario/index";
     }
 
-
-    // Maneja las solicitudes GET a la ruta "usuarios/create".
     @GetMapping("/create")
     public String showCreateForm(Model model) {
 
-        // Añado un nuevo objeto Usuario al modelo para ser utilizado en el formulario de creación.
         model.addAttribute("usuario", new Usuario());
-
-        // Añado una lista de todas las empresas al modelo para ser utilizada al momento de crear
-        // un usuario y seleccionar a la empresa que perteneces.
         model.addAttribute("empresas", empresaService.obtenerTodos());
-
-        // Añado una lista de todos los roles al modelo para ser utilizada al momento de crear un
-        // usuario y asignarle un rol.
         model.addAttribute("roles", rolesService.obtenerTodos());
 
-        // Devuelvo la vista "usuario/create" para mostrar el formulario de creación.
         return "usuario/create";
     }
 
-
-    // Maneja las solicitudes POST a la ruta "usuarios/save".
     @PostMapping("/save")
-    public String saveUsuario(@ModelAttribute("usuario") Usuario usuario, BindingResult result) {
+    public String saveUsuario(@ModelAttribute("usuario") Usuario usuario,
+                              @RequestParam(value = "currentPassword", required = false) String currentPassword,
+                              @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
+                              BindingResult result, RedirectAttributes attributes) {
 
-        // Verifico si hay errores en el formulario.
         if (result.hasErrors()) {
-            // Si hay errores, vuelvo al formulario de creación.
             return "usuario/create";
         }
 
         // Obtengo un usuario por defecto desde la base de datos con el ID 1.
         Usuario usuarioPorDefecto = usuarioService.buscarPorId(1).get();
-        if (usuarioPorDefecto == null) {
-            return "usuario/create";
+        if (usuarioPorDefecto == null) { // Verifico si el usuario por defecto existe.
         }
 
         // Asigno el usuario por defecto como creador y modificador del nuevo usuario.
@@ -132,37 +125,72 @@ public class UsuarioController {
 
         // Verifico si la empresa existe.
         if (empresa == null) {
-            // Si no existe, regreso al formulario de creación.
             return "usuario/create";
         }
 
-        // Asigno la empresa al usuario.
         usuario.setEmpresa(empresa);
 
-        // Busco el rol seleccionado en la base de datos por su ID.
         Roles role = rolesService.buscarPorId(usuario.getRol().get(0).getId())
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-// Asigno el rol al usuario. Asegúrate de que `usuario.getRol()` no sea `null` o vacío.
         if (usuario.getRol() == null) {
+            attributes.addFlashAttribute("error", "Rol no encontrado." );
             usuario.setRol(new ArrayList<>());
         }
         usuario.getRol().clear(); // Limpiamos la lista existente.
         usuario.getRol().add(role); // Añadimos el rol encontrado.
 
+        // Determina si el usuario es nuevo o existente.
+        boolean isNew = (usuario.getId() == null);
+
+        if(!isNew && usuario.getPass() != null && !usuario.getPass().isEmpty()){
+
+           //Verificamos la contraseña actual
+            Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if (!encoder.matches(currentPassword, usuarioExistente.getPass())) {
+                attributes.addFlashAttribute("error", "La contraseña no coincide.");
+                return "redirect:/usuarios/edit/" + usuario.getId();
+            }
+
+            if(!usuario.getPass().equals(confirmPassword)) {
+                attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
+                return "redirect:/usuarios/edit/" + usuario.getId();
+            }
+            
+            //Si la contraseña actual es correcta, encripta y establece la nueva contraseña
+            usuario.setPass(encoder.encode(usuario.getPass()));
+        } else if (!isNew){
+            //no codificamos la contraseña si no se ha modificado
+            Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            usuario.setPass(usuarioExistente.getPass()); //se mantiene la contraseña actual
+        } else if (isNew && (usuario.getPass() != null && !usuario.getPass().isEmpty())) {
+            // Si es un nuevo usuario y se proporciona una contraseña, encripta la contraseña
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            usuario.setPass(encoder.encode(usuario.getPass()));
+        } else if (isNew) {
+            attributes.addFlashAttribute("error", "Debe proporcionar una contraseña.");
+            return "redirect:/usuarios/create";
+        }
+
 
         // Guardo o actualizo el usuario en la base de datos usando el servicio.
         usuarioService.createOrEditOne(usuario);
 
-        // Redirijo a la lista de usuarios después de guardar.
+        // Asignar el mensaje basado en si el usuario es nuevo o editado.
+        if (isNew) {
+            attributes.addFlashAttribute("msg", "Usuario creado correctamente.");
+        } else {
+            attributes.addFlashAttribute("msg", "Usuario editado correctamente.");
+        }
+
         return "redirect:/usuarios";
     }
 
-
-    /**
-     * Maneja las solicitudes GET a la ruta "usuarios/details/{id}".
-     * Este método muestra los detalles de usuario específico
-     **/
     @GetMapping("/details/{id}")
     public String details(@PathVariable("id") Integer id, Model model) {
 
@@ -176,45 +204,29 @@ public class UsuarioController {
         return "usuario/details";
     }
 
-    /**
-     *  Maneja las solicitudes GET a la ruta "usuarios/edit/{id}".
-     *  Este método muestra el formulario para editar un usuario existente.
-     **/
+
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
 
         // Busco el usuario en la base de datos por su ID.
         Optional<Usuario> optionalUsuario = usuarioService.buscarPorId(id);
 
-        /**
-         *  Añado una lista de todos los roles al modelo para ser utilizados al momento de editar un
-         *  usuario y cambiarle el rol asignado.
-         **/
+
         model.addAttribute("roles", rolesService.obtenerTodos());
 
         // Verifico si el usuario existe.
         if (!optionalUsuario.isPresent()) {
-            // Si el usuario no existe, redirijo a la lista de usuarios.
             return "redirect:/usuario";
         }
-
-        // Si el usuario no existe, redirijo a la lista de usuarios.
         Usuario usuario = optionalUsuario.get();
         model.addAttribute("usuario", usuario);
-
-        /**
-         *  Añado una lista de todas las empresas al modelo para ser utilizada al momento de editar
-         *  un usuario y cambiar la empresa a la que pertenece*/
         model.addAttribute("empresas", empresaService.obtenerTodos());
 
         // Devuelvo la vista "usuario/edit" para mostrar el formulario de edición.
         return "usuario/edit";
     }
 
-    /**
-     * Maneja las solicitudes GET a la ruta "usuarios/remove/{id}".
-     * Este método muestra una pantalla para confirmar la eliminación de un usuario.
-     **/
+
     @GetMapping("/remove/{id}")
     public String remove(@PathVariable("id") Integer id, Model model) {
 
@@ -231,13 +243,13 @@ public class UsuarioController {
 
     // Maneja las solicitudes POST a la ruta "usuarios/delete".
     @PostMapping("/delete")
-    public String delete(@RequestParam("id") Long id, Usuario usuario, RedirectAttributes redirectAttributes) {
+    public String delete(@RequestParam("id") Long id, Usuario usuario, RedirectAttributes attributes) {
 
         // Elimino el usuario de la base de datos usando su ID.
         usuarioService.eliminarPorId(usuario.getId());
 
         // Añado un mensaje de éxito que se mostrará en la vista siguiente.
-        redirectAttributes.addFlashAttribute("success", "Usuario eliminado exitosamente.");
+        attributes.addFlashAttribute("msg", "Usuario eliminado correctamente.");
 
         // Redirijo a la lista de usuarios después de eliminar.
         return "redirect:/usuarios";
