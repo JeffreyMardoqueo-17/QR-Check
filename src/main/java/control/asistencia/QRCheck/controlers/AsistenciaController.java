@@ -46,8 +46,9 @@ public class AsistenciaController {
     }
 
     private Integer obtenerUsuarioActualId() {
-        return 1; // Valor ficticio porque aeiu capturare lo del usario logeuado
+        return 3; // Valor ficticio porque aeiu capturare lo del usario logeuado
     }
+
     @GetMapping("/scanQRCode")
     public String scanQRCode() {
         return "asistencia/scanQRCode";
