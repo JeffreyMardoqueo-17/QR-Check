@@ -55,13 +55,134 @@
             </td>
             <td th:text="${item.empresa != null ? item.empresa.nombre : 'N/A'}"></td>
             <td>
-                <a th:href="@{/usuarios/details/{id}(id=${item.id})}" class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Detalles</a>
-                <a th:href="@{/usuarios/edit/{id}(id=${item.id})}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i> Editar</a>
-                <a th:href="@{/usuarios/remove/{id}(id=${item.id})}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Eliminar</a>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsUserModal' + ${item.id}">
+                    <i class="fa-solid fa-eye"></i> Detalles
+                </button>
+                <a th:href="@{/usuarios/edit/{id} (id = ${item.id}) }" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i> Editar</a>
+                <!--<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editUserModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>-->
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeUserModal' + ${item.id}">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <!-- Modal para Detalles Rol -->
+    <th:block th:each="item : ${usuarios}">
+        <div class="modal fade" th:id="'detailsUserModal' + ${item.id}" tabindex="-1" aria-labelledby="detailsUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title" id="detailsUserModalLabel">Detalles del Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <dl class="row">
+                                <!-- Información General -->
+                                <dt class="col-sm-4 fw-bold">ID</dt>
+                                <dd class="col-sm-8" th:text="${item.id}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Nombre</dt>
+                                <dd class="col-sm-8" th:text="${item.nombre}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Apellido</dt>
+                                <dd class="col-sm-8" th:text="${item.apellido}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Email</dt>
+                                <dd class="col-sm-8" th:text="${item.email}"></dd>
+
+                                <!-- Roles -->
+                                <dt class="col-sm-4 fw-bold">Rol</dt>
+                                <dd class="col-sm-8">
+                                    <ul class="list-unstyled">
+                                        <th:block th:each="rol : ${item.rol}">
+                                            <li th:text="${rol.nombre}"></li>
+                                        </th:block>
+                                    </ul>
+                                </dd>
+
+                                <!-- Empresa -->
+                                <dt class="col-sm-4 fw-bold">Empresa</dt>
+                                <dd class="col-sm-8" th:text="${item.empresa.nombre}"></dd>
+
+                                <!-- Ubicación -->
+                                <dt class="col-sm-4 fw-bold">Latitud</dt>
+                                <dd class="col-sm-8" th:text="${item.latitud}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Longitud</dt>
+                                <dd class="col-sm-8" th:text="${item.longitud}"></dd>
+
+                                <!-- Fechas -->
+                                <dt class="col-sm-4 fw-bold">Fecha de Creación</dt>
+                                <dd class="col-sm-8" th:text="${item.fechaCreacion}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Fecha de Modificación</dt>
+                                <dd class="col-sm-8" th:text="${item.fechaModificacion}"></dd>
+
+                                <!-- Usuarios -->
+                                <dt class="col-sm-4 fw-bold">Creado Por</dt>
+                                <dd class="col-sm-8" th:text="${item.creadoPor.nombre}"></dd>
+
+                                <dt class="col-sm-4 fw-bold">Modificado Por</dt>
+                                <dd class="col-sm-8" th:text="${item.modificadoPor.nombre}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Modal para Eliminar Roles -->
+    <th:block th:each="item : ${usuarios}">
+        <div class="modal fade" th:id="'removeUserModal' + ${item.id}" tabindex="-1" aria-labelledby="removeUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="removeUserModalLabel">Eliminar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar el usuario?</p>
+                        <dl class="row">
+                        <dt class="col-sm-2">ID</dt>
+                        <dd class="col-sm-10" th:text="${item.id}"></dd>
+
+                        <dt class="col-sm-2">Nombre</dt>
+                        <dd class="col-sm-10" th:text="${item.nombre}"></dd>
+
+                        <dt class="col-sm-2">Apellido</dt>
+                        <dd class="col-sm-10" th:text="${item.apellido}"></dd>
+
+                        <dt class="col-sm-2">Email</dt>
+                        <dd class="col-sm-10" th:text="${item.email}"></dd>
+
+                        <dt class="col-sm-2">Rol</dt>
+                        <dd class="col-sm-10" th:each="rol : ${item.rol}" th:text="${rol.nombre}"></dd>
+
+                        <dt class="col-sm-2">Empresa</dt>
+                        <dd class="col-sm-8" th:text="${item.empresa.nombre}"></dd>
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <form th:action="@{/usuarios/delete}" method="post">
+                            <input type="hidden" name="id" th:value="${item.id}">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
