@@ -145,7 +145,7 @@ public class UsuarioController {
 
         if(!isNew && usuario.getPass() != null && !usuario.getPass().isEmpty()){
 
-           //Verificamos la contraseña actual
+            //Verificamos la contraseña actual
             Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -160,7 +160,7 @@ public class UsuarioController {
                 attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
                 return "redirect:/usuarios/edit/" + usuario.getId();
             }
-            
+
             //Si la contraseña actual es correcta, encripta y establece la nueva contraseña
             usuario.setPass(encoder.encode(usuario.getPass()));
         } else if (!isNew){

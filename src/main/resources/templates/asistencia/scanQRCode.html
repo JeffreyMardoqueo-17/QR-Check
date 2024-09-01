@@ -1,75 +1,144 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/_mainLayout">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escanear Código QR</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <title>Escanear QR de asistencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        #qr-reader {
-            width: 100%;
-            height: 400px; /* Ajustar el tamaño según tus necesidades */
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        #qr-reader-results {
+
+        .qr-reader-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #qr-canvas {
+            display: none;
+            margin-bottom: 20px;
+            width: 100%;
+            height: auto;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #qr-icon {
+            max-width: 175px;
+            margin-bottom: 20px;
+        }
+
+        .control-buttons {
             margin-top: 20px;
         }
-        #retry-button {
+
+        .control-buttons button {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .instructions {
+            text-align: left;
             margin-top: 20px;
         }
     </style>
 </head>
+
 <body>
-<div layout:fragment="content" class="container qr-scanner-container">
-    <h1>Escanear Código QR</h1>
-    <div id="qr-reader"></div>
-    <div id="qr-reader-results">
-        <p id="result">Esperando escaneo...</p>
+    <div class="qr-reader-card">
+        <h5 class="text-center">Escanear QR de asistencia</h5>
+        <div id="qr-canvas-container" class="text-center">
+            <img id="qr-icon"
+                src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg"
+                alt="QR Icon">
+            <canvas id="qr-canvas"></canvas>
+        </div>
+        <div class="instructions">
+            <h6>Pasos a seguir:</h6>
+            <ol>
+                <li>Abre la cámara de tu dispositivo.</li>
+                <li>Apunta la cámara al código QR.</li>
+                <li>Espera a que el código QR se escanee.</li>
+                <li>Listo, ya puedes acceder a la asistencia.</li>
+            </ol>
+        </div>
+        <div class="control-buttons">
+            <button id="btn-encender" class="btn btn-dark" onclick="encenderCamara()">Escanear Código QR</button>
+            <button id="btn-cerrar" class="btn btn-secondary" style="display: none;" onclick="cerrarCamara()">Cerrar
+                Cámara</button>
+        </div>
     </div>
-    <button id="retry-button" class="btn btn-primary" style="display: none;">Volver a Escanear</button>
-   <script>
-       function onScanSuccess(decodedText, decodedResult) {
-    // Manejar el resultado del escaneo
-    document.getElementById('result').innerText = `Código escaneado: ${decodedText}`;
-    // Redirigir a la URL para marcar la asistencia
-    window.location.href = `http://localhost:8080/marcarAsistencia?asistenciaId=${decodedText}`;
-}
 
-function onScanError(errorMessage) {
-    console.warn(`Error de escaneo: ${errorMessage}`);
-    alert("Error en el escaneo");
-}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.3.1/jsQR.min.js"></script>
+    <script>
+        const video = document.createElement("video");
+        const canvasElement = document.getElementById("qr-canvas");
+        const canvas = canvasElement.getContext("2d");
+        const qrIcon = document.getElementById("qr-icon");
+        const btnEncender = document.getElementById("btn-encender");
+        const btnCerrar = document.getElementById("btn-cerrar");
+        let scanning = false;
 
-var html5QrCode = new Html5Qrcode("qr-reader");
+        const encenderCamara = () => {
+            navigator.mediaDevices
+                .getUserMedia({ video: { facingMode: "environment" } })
+                .then(function (stream) {
+                    scanning = true;
+                    qrIcon.style.display = "none"; // Oculta el icono de QR
+                    canvasElement.style.display = "block"; // Muestra el canvas
+                    video.setAttribute("playsinline", true); // necesario para evitar fullscreen en iOS
+                    video.srcObject = stream;
+                    video.play();
+                    requestAnimationFrame(tick);
+                    btnEncender.style.display = "none"; // Oculta el botón de encender
+                    btnCerrar.style.display = "block"; // Muestra el botón de cerrar
+                });
+        };
 
-// Función para iniciar el escaneo
-function startScan() {
-    html5QrCode.start(
-        { facingMode: "environment" }, // Usa la cámara trasera
-        { fps: 10, qrbox: 250 }, // Opciones de configuración
-        onScanSuccess, // Función de éxito
-        onScanError // Función de error
-    ).catch(err => {
-        console.error(`Error inicializando el escáner: ${err}`);
-    });
-}
+        function tick() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
-// Iniciar el escaneo al cargar la página
-startScan();
+                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                const code = jsQR(imageData.data, canvasElement.width, canvasElement.height, {
+                    inversionAttempts: "dontInvert",
+                });
 
-// Opción para volver a escanear
-document.getElementById('retry-button').addEventListener('click', function() {
-    startScan();
-});
+                if (code) {
+                    Swal.fire(`Código escaneado: ${code.data}`);
+                    cerrarCamara();
+                } else {
+                    scanning && requestAnimationFrame(tick); // Continúa escaneando
+                }
+            } else {
+                requestAnimationFrame(tick); // Continúa intentando
+            }
+        }
 
-   </script>
-</div>
-
-
+        const cerrarCamara = () => {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            canvasElement.style.display = "none"; // Oculta el canvas
+            qrIcon.style.display = "block"; // Muestra el icono de QR
+            btnEncender.style.display = "block"; // Muestra el botón de encender
+            btnCerrar.style.display = "none"; // Oculta el botón de cerrar
+            scanning = false;
+        };
+    </script>
 </body>
+
 </html>

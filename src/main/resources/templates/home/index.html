@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorate="/layouts/_mainLayout">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="/layouts/_mainLayout">
 
 <head>
     <meta charset="utf-8" />
@@ -7,29 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Página Principal</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         #map {
-            height: 500px;
+            height: 100%;
             width: 100%;
-            margin-top: 20px;
-            border-radius: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .leaflet-popup-content-wrapper {
             border-radius: 8px;
-            background: #fff;
+            background: #ffffffe9;
             padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         }
 
         .leaflet-popup-content {
             color: #292321;
             font-size: 16px;
             text-align: center;
-        }
-
-        .leaflet-popup-tip-container {
-            display: none;
         }
 
         .custom-marker {
@@ -43,84 +50,171 @@
 
         .btn-regresar {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            bottom: 20px;
+            right: 20px;
             z-index: 1000;
+            background-color: #333333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .worker-list {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 20%;
+            backdrop-filter: calc(100% - 10px);
+            background-color: rgba(255, 255, 255, 0.696);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(125, 125, 125, 0.352);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .worker-list h3 {
+            margin-bottom: 10px;
+        }
+
+        .list-group-item {
+            background-color: transparent;
+            border: none;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(166, 205, 247, 0.2);
+        }
+
+        .tooltip-custom {
+            position: absolute;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1001;
+            white-space: nowrap;
+        }
+
+        .btn-custom {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #333333;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-decoration: none;
         }
     </style>
 </head>
 
-<body>
-<div layout:fragment="content" class="container mt-5">
-    <h1 class="text-center mb-4">Mapa de Ubicación</h1>
-    <button class="btn btn-primary btn-regresar">Regresar a la Empresa</button>
-    <div id="map"></div>
-    <div class="mt-4">
-        <h3>Trabajadores dentro del rango:</h3>
-        <ul id="dentroRango" class="list-group"></ul>
-        <h3 class="mt-3">Trabajadores fuera del rango:</h3>
-        <ul id="fueraRango" class="list-group"></ul>
+<div layout:fragment="content">
+    <div class="mt-10">
+        <button class="btn-regresar">🙄</button>
+        <div id="map"></div>
+        <div class="worker-list">
+            <a th:href="@{/asistencias}" class="btn btn-custom">Ver lista</a>
+
+            <h6>Trabajadores dentro del rango:</h6>
+            <ul id="dentroRango" class="list-group"></ul>
+            <h6>Trabajadores fuera de Rango:</h6>
+            <ul id="fueraRango" class="list-group"></ul>
+        </div>
+
     </div>
 
-    <!-- Datos ocultos de los trabajadores para que sean accesibles en el JS -->
-    <ul id="trabajadoresData" style="display:none;">
-        <li th:each="trabajador : ${trabajadores}"
-            data-nombre="[[${trabajador.nombre}]]"
-            data-lat="[[${trabajador.latitud}]]"
-            data-lng="[[${trabajador.longitud}]]">
-        </li>
-    </ul>
+    <div id="tooltip" class="tooltip-custom"></div>
 
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var latEmpresa = /*[[${empresaLatitud}]]*/ 0.0;
-            var lngEmpresa = /*[[${empresaLongitud}]]*/ 0.0;
-            var radioPermitido = 500; // Radio en metros
+            // Coordenadas de la empresa
+            var latEmpresa = 13.691638990002149;
+            var lngEmpresa = -89.81834427603658;
+            var radioPermitido = 200; // Radio en metros
 
-            var map = L.map('map').setView([latEmpresa, lngEmpresa], 15);
+            // Inicializar el mapa
+            var map = L.map('map').setView([latEmpresa, lngEmpresa], 17);
 
+            // Cargar la capa de mapas
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // Agregar marcador de la empresa
             L.marker([latEmpresa, lngEmpresa]).addTo(map)
-                .bindPopup('<b>Empresa</b><br>Ubicación principal.').openPopup();
+                .bindPopup('<b>QR CHECK ✔</b><br>Ubicación principal.').openPopup();
 
+            // Dibujar círculo que representa el rango permitido
             L.circle([latEmpresa, lngEmpresa], {
-                color: 'blue',
-                fillColor: '#1E90FF',
+                color: 'green',
+                fillColor: '#57ef57a3',
                 fillOpacity: 0.3,
                 radius: radioPermitido
             }).addTo(map);
 
-            // Obtener los datos de los trabajadores desde el DOM
-            var trabajadoresElements = document.querySelectorAll('#trabajadoresData li');
-            trabajadoresElements.forEach(function (element) {
-                var trabajador = {
-                    nombre: element.getAttribute('data-nombre'),
-                    lat: parseFloat(element.getAttribute('data-lat')),
-                    lng: parseFloat(element.getAttribute('data-lng'))
-                };
+            // Array de trabajadores ficticios
+            var trabajadores = [
+                { nombre: "Juan Pérez", lat: 13.68731618691775, lng: -89.81805008686588 },
+                { nombre: "Ana López", lat: 13.6918, lng: -89.8184 },
+                { nombre: "Carlos Martínez", lat: 13.6917, lng: -89.8185 },
+                { nombre: "María Rodríguez", lat: 13.6919, lng: -89.8183 },
+                { nombre: "Luis Gómez", lat: 13.6920, lng: -89.8186 }
+            ];
 
+            // Obtener el elemento del tooltip
+            var tooltip = document.getElementById('tooltip');
+
+            // Procesar cada trabajador y agregarlo al mapa y a la lista correspondiente
+            trabajadores.forEach(function (trabajador) {
                 var distancia = calcularDistancia(latEmpresa, lngEmpresa, trabajador.lat, trabajador.lng);
-                if (distancia <= radioPermitido) {
-                    document.getElementById('dentroRango').innerHTML += '<li class="list-group-item">' + trabajador.nombre + '</li>';
-                } else {
-                    document.getElementById('fueraRango').innerHTML += '<li class="list-group-item">' + trabajador.nombre + '</li>';
-                }
 
-                var customIcon = L.divIcon({
-                    className: 'custom-marker'
+                var listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = trabajador.nombre;
+
+                // Crear el marcador en el mapa para el trabajador
+                var marker = L.marker([trabajador.lat, trabajador.lng], {
+                    icon: L.divIcon({ className: 'custom-marker' })
+                }).addTo(map)
+                    .bindPopup('<b>' + trabajador.nombre + '</b><br>Distancia a la empresa: ' + distancia.toFixed(2) + ' metros');
+
+                // Agregar eventos de hover para mostrar el tooltip
+                listItem.addEventListener('mouseenter', function (e) {
+                    tooltip.textContent = trabajador.nombre + ' - Distancia a la empresa: ' + distancia.toFixed(2) + ' metros';
+                    tooltip.style.display = 'block';
+                    tooltip.style.top = e.clientY + 'px';
+                    tooltip.style.left = e.clientX + 'px';
                 });
 
-                L.marker([trabajador.lat, trabajador.lng], { icon: customIcon }).addTo(map)
-                    .bindPopup('<b>' + trabajador.nombre + '</b><br>Distancia a la empresa: ' + distancia.toFixed(2) + ' metros').openPopup();
+                listItem.addEventListener('mouseleave', function () {
+                    tooltip.style.display = 'none';
+                });
+
+                // Agregar evento de clic para enfocar el marcador en el mapa
+                listItem.addEventListener('click', function () {
+                    map.setView([trabajador.lat, trabajador.lng], 18);
+                    marker.openPopup();
+                });
+
+                if (distancia <= radioPermitido) {
+                    document.getElementById('dentroRango').appendChild(listItem);
+                } else {
+                    document.getElementById('fueraRango').appendChild(listItem);
+                }
             });
 
-            document.querySelector('.btn-regresar').addEventListener('click', function () {
-                map.setView([latEmpresa, lngEmpresa], 15);
-            });
-
+            // Función para calcular la distancia entre dos puntos (coordenadas en grados)
             function calcularDistancia(latitud1, longitud1, latitud2, longitud2) {
                 var radioTierra = 6371e3; // Radio de la Tierra en metros
                 var latitudRadianes1 = latitud1 * Math.PI / 180;
@@ -136,14 +230,13 @@
 
                 return radioTierra * c;
             }
+
+            // Evento para el botón "Regresar a la Empresa"
+            document.querySelector('.btn-regresar').addEventListener('click', function () {
+                map.setView([latEmpresa, lngEmpresa], 19);
+            });
         });
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </div>
 
-</body>
 </html>

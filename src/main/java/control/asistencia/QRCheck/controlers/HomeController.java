@@ -51,7 +51,6 @@ public class HomeController {
     }
 
     private Integer obtenerUsuarioActualId() {
-        // Implementa la lógica para obtener el ID del usuario autenticado
         return 3; // Ejemplo de ID de usuario, deberías cambiarlo por el ID real del usuario autenticado
     }
 }
