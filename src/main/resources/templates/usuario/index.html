@@ -58,7 +58,10 @@
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#detailsUserModal' + ${item.id}">
                     <i class="fa-solid fa-eye"></i> Detalles
                 </button>
-                <a th:href="@{/usuarios/edit/{id}(id=${item.id})}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i> Editar</a>
+                <a th:href="@{/usuarios/edit/{id} (id = ${item.id}) }" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i> Editar</a>
+                <!--<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editUserModal' + ${item.id}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                </button>-->
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#removeUserModal' + ${item.id}">
                     <i class="fa-solid fa-trash"></i> Eliminar
                 </button>
