@@ -1,3 +1,4 @@
+
 package control.asistencia.QRCheck.controlers;
 
 import control.asistencia.QRCheck.models.Empresa;

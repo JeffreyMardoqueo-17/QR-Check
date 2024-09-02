@@ -4,65 +4,80 @@
       layout:decorate="/layouts/_mainLayout">
 
 <div layout:fragment="content">
-    <h1>Crear nuevo Usuario</h1>
-    <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del usuario" required>
+    <div class="container mt-5">
+        <h1 class="mb-4">Crear nuevo Usuario</h1>
+
+        <form th:action="@{/usuarios/save}" th:object="${usuario}" method="post">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Escriba el nombre del usuario" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" th:field="*{apellido}" id="apellido" placeholder="Escriba el apellido del usuario" required>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" class="form-control" th:field="*{apellido}" id="apellido" placeholder="Escriba el apellido del usuario" required>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="Escriba el email del usuario" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="pass" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" th:field="*{pass}" id="pass" placeholder="Escriba la contraseña del usuario" required>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="Escriba el email del usuario" required>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select id="rol" class="form-select" th:field="*{rol}">
+                            <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="latitud" class="form-label">Latitud</label>
+                        <input type="number" step="any" class="form-control" th:field="*{latitud}" id="latitud" placeholder="Escriba la latitud del usuario">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="pass">Contraseña</label>
-                    <input type="password" class="form-control" th:field="*{pass}" id="pass" placeholder="Escriba la contraseña del usuario" required>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="empresas" class="form-label">Empresa</label>
+                        <select id="empresas" class="form-select" th:field="*{empresa}">
+                            <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="longitud" class="form-label">Longitud</label>
+                        <input type="number" step="any" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="rol">Rol</label>
-                    <select id="rol" class="form-control" th:field="*{rol}">
-                        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
-                    </select>
-                </div>
+
+            <div class="d-flex align-items-center mt-4">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/usuarios}" class="btn btn-secondary ms-2">Regresar</a>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="latitud">Latitud</label>
-                    <input type="number" step="0.000001" class="form-control" th:field="*{latitud}" id="latitud" placeholder="Escriba la latitud del usuario">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="empresas">Empresa</label>
-                    <select id="empresas" class="form-control" th:field="*{empresa}">
-                        <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="longitud">Longitud</label>
-                    <input type="number" step="0.000001" class="form-control" th:field="*{longitud}" id="longitud" placeholder="Escriba la longitud del usuario">
-                </div>
-            </div>
-        </div>
-        <hr>
-        <button type="submit" class="btn btn-primary">Guardar</button> |
-        <a th:href="@{/usuarios}">Regresar</a>
-    </form>
+        </form>
+    </div>
 </div>
+
 </html>
