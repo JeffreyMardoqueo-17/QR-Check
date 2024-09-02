@@ -1,5 +1,9 @@
 # QR-Check
 El proyecto Toma de Asistencia QRCheck es una innovadora aplicación web diseñada para gestionar y registrar la asistencia de empleados de manera eficiente y segura mediante el uso de códigos QR y tecnología de geolocalización. 
+![image](https://github.com/user-attachments/assets/661b2f4b-167a-46bd-86a3-965522d0cd9a)
+
+
+
 ![image](https://github.com/user-attachments/assets/c5dd43df-4c9f-4d38-a606-f9f4036aa1ea)
 
 ![image](https://github.com/user-attachments/assets/a0497077-62b9-4296-b598-98a29706432e)
